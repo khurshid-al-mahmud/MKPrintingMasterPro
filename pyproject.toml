@@ -1,0 +1,11 @@
+[project]
+name = "mkprintingmasterpro"
+version = "0.1.0"
+description = "Professional ERP System for MK Graphics & Printing Press"
+readme = "README.md"
+requires-python = ">=3.13"
+
+dependencies = [
+    "fastapi>=0.116.0",
+    "uvicorn>=0.35.0",
+]
