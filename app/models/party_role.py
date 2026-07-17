@@ -6,7 +6,7 @@ A Party can have one or more business roles.
 Example:
 
 ABC Traders
-    ├── Trade Customer
+    ├── Customer
     ├── Supplier
 
 Abdul Karim
@@ -15,13 +15,8 @@ Abdul Karim
     └── Employee
 """
 
-from sqlalchemy import (
-    Boolean,
-    Column,
-    ForeignKey,
-    Integer,
-    String,
-)
+from sqlalchemy import Boolean, ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import Base
 
@@ -31,34 +26,33 @@ class PartyRole(Base):
 
     __tablename__ = "party_roles"
 
-    id = Column(
-        Integer,
+    id: Mapped[int] = mapped_column(
         primary_key=True,
+        autoincrement=True,
         index=True,
     )
 
-    party_id = Column(
-        Integer,
+    party_id: Mapped[int] = mapped_column(
         ForeignKey("parties.id"),
         nullable=False,
         index=True,
     )
 
-    role = Column(
+    role: Mapped[str] = mapped_column(
         String(50),
         nullable=False,
         index=True,
     )
 
-    role_number = Column(
+    role_number: Mapped[str] = mapped_column(
         String(30),
         nullable=False,
         unique=True,
         index=True,
     )
 
-    is_active = Column(
+    is_active: Mapped[bool] = mapped_column(
         Boolean,
-        nullable=False,
         default=True,
+        nullable=False,
     )

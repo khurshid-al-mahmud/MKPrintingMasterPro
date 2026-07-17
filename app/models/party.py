@@ -1,24 +1,17 @@
 """
 Party Master Model.
 
-This model stores all Individuals,
-Businesses and Organizations.
+Stores every Individual, Company and Organization.
 
 Every Customer, Supplier,
 Employee and Print Partner
 starts as a Party.
 """
 
-from sqlalchemy import (
-    Boolean,
-    Column,
-    DateTime,
-    Integer,
-    String,
-    Text,
-)
+from datetime import datetime
 
-from sqlalchemy.sql import func
+from sqlalchemy import Boolean, DateTime, String, Text
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import Base
 
@@ -28,98 +21,100 @@ class Party(Base):
 
     __tablename__ = "parties"
 
-    id = Column(
-        Integer,
+    id: Mapped[int] = mapped_column(
         primary_key=True,
+        autoincrement=True,
         index=True,
     )
 
-    party_type = Column(
+    party_type: Mapped[str] = mapped_column(
         String(30),
         nullable=False,
     )
 
-    party_name = Column(
+    party_name: Mapped[str] = mapped_column(
         String(200),
         nullable=False,
         index=True,
     )
 
-    display_name = Column(
+    display_name: Mapped[str | None] = mapped_column(
         String(200),
         nullable=True,
     )
 
-    mobile = Column(
+    mobile: Mapped[str | None] = mapped_column(
         String(20),
         nullable=True,
         index=True,
     )
 
-    alternate_mobile = Column(
+    alternate_mobile: Mapped[str | None] = mapped_column(
         String(20),
         nullable=True,
     )
 
-    whatsapp = Column(
+    whatsapp: Mapped[str | None] = mapped_column(
         String(20),
         nullable=True,
     )
 
-    email = Column(
+    email: Mapped[str | None] = mapped_column(
         String(150),
         nullable=True,
     )
 
-    website = Column(
+    website: Mapped[str | None] = mapped_column(
         String(200),
         nullable=True,
     )
 
-    address = Column(
+    address: Mapped[str | None] = mapped_column(
         Text,
         nullable=True,
     )
 
-    area = Column(
+    area: Mapped[str | None] = mapped_column(
         String(100),
         nullable=True,
     )
 
-    district = Column(
+    district: Mapped[str | None] = mapped_column(
         String(100),
         nullable=True,
     )
 
-    division = Column(
+    division: Mapped[str | None] = mapped_column(
         String(100),
         nullable=True,
     )
 
-    country = Column(
+    country: Mapped[str] = mapped_column(
         String(100),
-        nullable=True,
         default="Bangladesh",
+        nullable=False,
     )
 
-    remarks = Column(
+    remarks: Mapped[str | None] = mapped_column(
         Text,
         nullable=True,
     )
 
-    is_active = Column(
+    is_active: Mapped[bool] = mapped_column(
         Boolean,
-        nullable=False,
         default=True,
+        nullable=False,
     )
 
-    created_at = Column(
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        server_default=func.now(),
+        default=datetime.utcnow,
+        nullable=False,
     )
 
-    updated_at = Column(
+    updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now(),
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
+        nullable=False,
     )

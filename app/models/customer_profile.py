@@ -6,14 +6,10 @@ Stores customer-specific information.
 Every Customer Profile belongs to one Party.
 """
 
-from sqlalchemy import (
-    Boolean,
-    Column,
-    ForeignKey,
-    Integer,
-    Numeric,
-    String,
-)
+from decimal import Decimal
+
+from sqlalchemy import Boolean, ForeignKey, Numeric, String
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import Base
 
@@ -23,57 +19,55 @@ class CustomerProfile(Base):
 
     __tablename__ = "customer_profiles"
 
-    id = Column(
-        Integer,
+    id: Mapped[int] = mapped_column(
         primary_key=True,
+        autoincrement=True,
         index=True,
     )
 
-    party_id = Column(
-        Integer,
+    party_id: Mapped[int] = mapped_column(
         ForeignKey("parties.id"),
         nullable=False,
         unique=True,
         index=True,
     )
 
-    customer_number = Column(
+    customer_number: Mapped[str] = mapped_column(
         String(30),
         nullable=False,
         unique=True,
         index=True,
     )
 
-    customer_category = Column(
+    customer_category: Mapped[str | None] = mapped_column(
         String(100),
         nullable=True,
     )
 
-    credit_limit = Column(
+    credit_limit: Mapped[Decimal] = mapped_column(
         Numeric(12, 2),
+        default=Decimal("0.00"),
         nullable=False,
-        default=0,
     )
 
-    credit_days = Column(
-        Integer,
-        nullable=False,
+    credit_days: Mapped[int] = mapped_column(
         default=0,
+        nullable=False,
     )
 
-    price_category = Column(
+    price_category: Mapped[str | None] = mapped_column(
         String(100),
         nullable=True,
     )
 
-    discount_rate = Column(
+    discount_rate: Mapped[Decimal] = mapped_column(
         Numeric(5, 2),
+        default=Decimal("0.00"),
         nullable=False,
-        default=0,
     )
 
-    is_active = Column(
+    is_active: Mapped[bool] = mapped_column(
         Boolean,
-        nullable=False,
         default=True,
+        nullable=False,
     )

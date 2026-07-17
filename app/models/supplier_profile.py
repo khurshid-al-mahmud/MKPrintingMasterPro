@@ -8,10 +8,13 @@ Every Supplier Profile belongs to one Party.
 
 from sqlalchemy import (
     Boolean,
-    Column,
     ForeignKey,
     Integer,
     String,
+)
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_column,
 )
 
 from app.models.base import Base
@@ -22,45 +25,44 @@ class SupplierProfile(Base):
 
     __tablename__ = "supplier_profiles"
 
-    id = Column(
+    id: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
         index=True,
     )
 
-    party_id = Column(
-        Integer,
+    party_id: Mapped[int] = mapped_column(
         ForeignKey("parties.id"),
         nullable=False,
         unique=True,
         index=True,
     )
 
-    supplier_number = Column(
+    supplier_number: Mapped[str] = mapped_column(
         String(30),
         nullable=False,
         unique=True,
         index=True,
     )
 
-    supplier_category = Column(
+    supplier_category: Mapped[str | None] = mapped_column(
         String(100),
         nullable=True,
     )
 
-    payment_terms = Column(
+    payment_terms: Mapped[str | None] = mapped_column(
         String(200),
         nullable=True,
     )
 
-    preferred_supplier = Column(
+    preferred_supplier: Mapped[bool] = mapped_column(
         Boolean,
-        nullable=False,
         default=False,
+        nullable=False,
     )
 
-    is_active = Column(
+    is_active: Mapped[bool] = mapped_column(
         Boolean,
-        nullable=False,
         default=True,
+        nullable=False,
     )

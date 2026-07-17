@@ -7,20 +7,13 @@ for a Party.
 Example:
 
 ABC Traders
-
-- Rahim
-- Karim
-- Hasan
+    ├── Rahim
+    ├── Karim
+    └── Hasan
 """
 
-from sqlalchemy import (
-    Boolean,
-    Column,
-    ForeignKey,
-    Integer,
-    String,
-    Text,
-)
+from sqlalchemy import Boolean, ForeignKey, String, Text
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import Base
 
@@ -30,57 +23,56 @@ class PartyContact(Base):
 
     __tablename__ = "party_contacts"
 
-    id = Column(
-        Integer,
+    id: Mapped[int] = mapped_column(
         primary_key=True,
+        autoincrement=True,
         index=True,
     )
 
-    party_id = Column(
-        Integer,
+    party_id: Mapped[int] = mapped_column(
         ForeignKey("parties.id"),
         nullable=False,
         index=True,
     )
 
-    contact_name = Column(
+    contact_name: Mapped[str] = mapped_column(
         String(200),
         nullable=False,
     )
 
-    designation = Column(
+    designation: Mapped[str | None] = mapped_column(
         String(150),
         nullable=True,
     )
 
-    mobile = Column(
+    mobile: Mapped[str | None] = mapped_column(
         String(20),
         nullable=True,
     )
 
-    alternate_mobile = Column(
+    alternate_mobile: Mapped[str | None] = mapped_column(
         String(20),
         nullable=True,
     )
 
-    email = Column(
+    email: Mapped[str | None] = mapped_column(
         String(150),
         nullable=True,
     )
 
-    notes = Column(
+    notes: Mapped[str | None] = mapped_column(
         Text,
         nullable=True,
     )
 
-    is_primary = Column(
+    is_primary: Mapped[bool] = mapped_column(
         Boolean,
-        nullable=False,
         default=False,
+        nullable=False,
     )
 
-    is_active = Column(
+    is_active: Mapped[bool] = mapped_column(
         Boolean,
-        nullable=False,
         default=True,
+        nullable=False,
     )

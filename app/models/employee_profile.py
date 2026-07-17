@@ -6,13 +6,8 @@ Stores employee-specific information.
 Every Employee Profile belongs to one Party.
 """
 
-from sqlalchemy import (
-    Boolean,
-    Column,
-    ForeignKey,
-    Integer,
-    String,
-)
+from sqlalchemy import Boolean, ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import Base
 
@@ -22,50 +17,49 @@ class EmployeeProfile(Base):
 
     __tablename__ = "employee_profiles"
 
-    id = Column(
-        Integer,
+    id: Mapped[int] = mapped_column(
         primary_key=True,
+        autoincrement=True,
         index=True,
     )
 
-    party_id = Column(
-        Integer,
+    party_id: Mapped[int] = mapped_column(
         ForeignKey("parties.id"),
         nullable=False,
         unique=True,
         index=True,
     )
 
-    employee_number = Column(
+    employee_number: Mapped[str] = mapped_column(
         String(30),
         nullable=False,
         unique=True,
         index=True,
     )
 
-    department = Column(
+    department: Mapped[str | None] = mapped_column(
         String(100),
         nullable=True,
     )
 
-    designation = Column(
+    designation: Mapped[str | None] = mapped_column(
         String(100),
         nullable=True,
     )
 
-    joining_date = Column(
+    joining_date: Mapped[str | None] = mapped_column(
         String(20),
         nullable=True,
     )
 
-    employment_status = Column(
+    employment_status: Mapped[str] = mapped_column(
         String(50),
-        nullable=True,
         default="Active",
+        nullable=False,
     )
 
-    is_active = Column(
+    is_active: Mapped[bool] = mapped_column(
         Boolean,
-        nullable=False,
         default=True,
+        nullable=False,
     )
