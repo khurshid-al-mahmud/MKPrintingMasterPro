@@ -6,13 +6,14 @@ for Party Management.
 """
 
 from app.models.party import Party
-from app.repositories.party_repository import (
-    PartyRepository,
-)
+from app.repositories.party_repository import PartyRepository
+from app.schemas.party import PartyCreate, PartyUpdate
 
 
 class PartyService:
-    """Business logic for Party."""
+    """
+    Service layer for Party management.
+    """
 
     def __init__(
         self,
@@ -20,9 +21,9 @@ class PartyService:
     ) -> None:
         self.repository = repository
 
-    def create_party(
+    def create(
         self,
-        party: Party,
+        party: PartyCreate,
     ) -> Party:
         """
         Create new party.
@@ -45,18 +46,18 @@ class PartyService:
                 "Mobile number already exists."
             )
 
-        return self.repository.create(
-            party,
+        new_party = Party(
+            party_name=party.party_name,
+            mobile=party.mobile,
+            email=party.email,
+            address=party.address,
         )
 
+        return self.repository.create(
+            new_party,
+        )
 
-
-
-
-
-
-
-    def get_party(
+    def get_by_id(
         self,
         party_id: int,
     ) -> Party | None:
@@ -68,7 +69,7 @@ class PartyService:
             party_id,
         )
 
-    def get_all_parties(
+    def get_all(
         self,
     ) -> list[Party]:
         """
@@ -77,10 +78,10 @@ class PartyService:
 
         return self.repository.get_all()
 
-    def update_party(
+    def update(
         self,
         party_id: int,
-        party_data: dict,
+        party_data: PartyUpdate,
     ) -> Party | None:
         """
         Update existing party.
@@ -88,17 +89,12 @@ class PartyService:
 
         return self.repository.update(
             party_id,
-            party_data,
+            party_data.model_dump(
+                exclude_unset=True,
+            ),
         )
 
-
-
-
-
-
-
-
-    def delete_party(
+    def delete(
         self,
         party_id: int,
     ) -> bool:
@@ -110,7 +106,7 @@ class PartyService:
             party_id,
         )
 
-    def search_parties(
+    def search(
         self,
         keyword: str,
     ) -> list[Party]:
