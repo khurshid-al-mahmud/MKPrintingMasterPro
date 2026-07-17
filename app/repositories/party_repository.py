@@ -1,50 +1,47 @@
 """
 Party Repository.
 
-Handles all Party database operations.
-
-This Repository will be used by:
-
-- Customer Module
-- Supplier Module
-- Employee Module
-- Sales Module
-- Purchase Module
+Database access layer
+for Party Management.
 """
 
-from typing import Optional
-
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.models.party import Party
 
 
 class PartyRepository:
-    """Repository for Party operations."""
+    """Repository for Party."""
 
-    def __init__(self, db: Session):
+    def __init__(
+        self,
+        db: Session,
+    ) -> None:
         self.db = db
 
-    # ----------------------------------------
-    # CREATE
-    # ----------------------------------------
+    def create(
+        self,
+        party: Party,
+    ) -> Party:
+        """
+        Create new party.
+        """
 
-    def create(self, party: Party) -> Party:
-        """Create new Party."""
         self.db.add(party)
         self.db.commit()
         self.db.refresh(party)
-        return party
 
-    # ----------------------------------------
-    # GET BY ID
-    # ----------------------------------------
+        return party
 
     def get_by_id(
         self,
         party_id: int,
-    ) -> Optional[Party]:
-        """Get Party by ID."""
+    ) -> Party | None:
+        """
+        Get party by ID.
+        """
+
         return (
             self.db.query(Party)
             .filter(
@@ -54,92 +51,97 @@ class PartyRepository:
             .first()
         )
 
-    # ----------------------------------------
-    # GET ALL
-    # ----------------------------------------
+    def get_all(
+        self,
+    ) -> list[Party]:
+        """
+        Get all active parties.
+        """
 
-    def get_all(self):
-        """Get all active parties."""
         return (
             self.db.query(Party)
             .filter(
                 Party.is_active.is_(True),
             )
-            .order_by(Party.party_name)
+            .order_by(
+                Party.party_name,
+            )
             .all()
         )
 
-    # ----------------------------------------
-    # GET BY MOBILE
-    # ----------------------------------------
 
-    def get_by_mobile(
-        self,
-        mobile: str,
-    ) -> Optional[Party]:
-        """Get Party by primary mobile."""
-        return (
-            self.db.query(Party)
-            .filter(
-                Party.mobile == mobile,
-                Party.is_active.is_(True),
-            )
-            .first()
-        )
 
-    # ----------------------------------------
-    # UPDATE
-    # ----------------------------------------
+    
+
+
+
 
     def update(
         self,
-        party: Party,
-    ) -> Party:
-        """Update Party."""
+        party_id: int,
+        party_data: dict,
+    ) -> Party | None:
+        """
+        Update existing party.
+        """
+
+        party = self.get_by_id(
+            party_id,
+        )
+
+        if party is None:
+            return None
+
+        for key, value in party_data.items():
+            if hasattr(
+                party,
+                key,
+            ):
+                setattr(
+                    party,
+                    key,
+                    value,
+                )
+
         self.db.commit()
-        self.db.refresh(party)
+        self.db.refresh(
+            party,
+        )
+
         return party
 
-    # ----------------------------------------
-    # DEACTIVATE
-    # ----------------------------------------
-
-    def deactivate(
+    def soft_delete(
         self,
-        party: Party,
-    ) -> Party:
-        """Soft delete (Inactive)."""
+        party_id: int,
+    ) -> bool:
+        """
+        Soft delete party.
+        """
+
+        party = self.get_by_id(
+            party_id,
+        )
+
+        if party is None:
+            return False
+
         party.is_active = False
 
         self.db.commit()
-        self.db.refresh(party)
-
-        return party
-
-    # ----------------------------------------
-    # DUPLICATE CHECK
-    # ----------------------------------------
-
-    def exists_by_mobile(
-        self,
-        mobile: str,
-    ) -> bool:
-        """Check duplicate mobile."""
-        return (
-            self.db.query(Party)
-            .filter(
-                Party.mobile == mobile,
-                Party.is_active.is_(True),
-            )
-            .first()
-            is not None
+        self.db.refresh(
+            party,
         )
+
+        return True
 
     def exists_by_name(
         self,
         party_name: str,
     ) -> bool:
-        """Check duplicate party name."""
+        """
+        Check duplicate party name.
+        """
+
         return (
             self.db.query(Party)
             .filter(
@@ -148,4 +150,58 @@ class PartyRepository:
             )
             .first()
             is not None
+        )
+
+
+
+
+
+
+
+    def exists_by_mobile(
+        self,
+        mobile: str,
+    ) -> bool:
+        """
+        Check duplicate mobile.
+        """
+
+        return (
+            self.db.query(Party)
+            .filter(
+                Party.mobile == mobile,
+                Party.is_active.is_(True),
+            )
+            .first()
+            is not None
+        )
+
+    def search(
+        self,
+        keyword: str,
+    ) -> list[Party]:
+        """
+        Search party by name, mobile or email.
+        """
+
+        return (
+            self.db.query(Party)
+            .filter(
+                Party.is_active.is_(True),
+                or_(
+                    Party.party_name.ilike(
+                        f"%{keyword}%"
+                    ),
+                    Party.mobile.ilike(
+                        f"%{keyword}%"
+                    ),
+                    Party.email.ilike(
+                        f"%{keyword}%"
+                    ),
+                ),
+            )
+            .order_by(
+                Party.party_name,
+            )
+            .all()
         )
