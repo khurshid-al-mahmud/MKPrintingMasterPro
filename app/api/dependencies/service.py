@@ -1,101 +1,97 @@
 """
-Service Dependency Provider.
+Service Dependencies.
 
-Central place for
-injecting service classes.
+Shared service dependencies
+for the entire ERP system.
 """
 
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from app.database.session import get_db
+from app.api.dependencies.database import get_db
 
-
-# =========================
-# Party Service
-# =========================
-
-from app.services.party_service import PartyService
+from app.repositories.customer_repository import CustomerRepository
+from app.repositories.employee_repository import EmployeeRepository
+from app.repositories.machine_repository import MachineRepository
 from app.repositories.party_repository import PartyRepository
+from app.repositories.print_partner_repository import PrintPartnerRepository
+from app.repositories.supplier_repository import SupplierRepository
+
+from app.services.customer_service import CustomerService
+from app.services.employee_service import EmployeeService
+from app.services.machine_service import MachineService
+from app.services.party_service import PartyService
+from app.services.print_partner_service import PrintPartnerService
+from app.services.supplier_service import SupplierService
 
 
 def get_party_service(
     db: Session = Depends(get_db),
-):
-    repository = PartyRepository(db)
+) -> PartyService:
+    """
+    Provide PartyService dependency.
+    """
 
     return PartyService(
-        repository
+        PartyRepository(db),
     )
-
-
-# =========================
-# Supplier Service
-# =========================
-
-from app.services.supplier_service import SupplierService
-from app.repositories.supplier_repository import SupplierRepository
 
 
 def get_supplier_service(
     db: Session = Depends(get_db),
-):
-    repository = SupplierRepository(db)
+) -> SupplierService:
+    """
+    Provide SupplierService dependency.
+    """
 
     return SupplierService(
-        repository
+        SupplierRepository(db),
     )
-
-
-# =========================
-# Customer Service
-# =========================
-
-from app.services.customer_service import CustomerService
-from app.repositories.customer_repository import CustomerRepository
 
 
 def get_customer_service(
     db: Session = Depends(get_db),
-):
-    repository = CustomerRepository(db)
+) -> CustomerService:
+    """
+    Provide CustomerService dependency.
+    """
 
     return CustomerService(
-        repository
+        CustomerRepository(db),
     )
-
-
-# =========================
-# Employee Service
-# =========================
-
-from app.services.employee_service import EmployeeService
-from app.repositories.employee_repository import EmployeeRepository
 
 
 def get_employee_service(
     db: Session = Depends(get_db),
-):
-    repository = EmployeeRepository(db)
+) -> EmployeeService:
+    """
+    Provide EmployeeService dependency.
+    """
 
     return EmployeeService(
-        repository
+        EmployeeRepository(db),
     )
-
-
-# =========================
-# Print Partner Service
-# =========================
-
-from app.services.print_partner_service import PrintPartnerService
-from app.repositories.print_partner_repository import PrintPartnerRepository
 
 
 def get_print_partner_service(
     db: Session = Depends(get_db),
-):
-    repository = PrintPartnerRepository(db)
+) -> PrintPartnerService:
+    """
+    Provide PrintPartnerService dependency.
+    """
 
     return PrintPartnerService(
-        repository
+        PrintPartnerRepository(db),
+    )
+
+
+def get_machine_service(
+    db: Session = Depends(get_db),
+) -> MachineService:
+    """
+    Provide MachineService dependency.
+    """
+
+    return MachineService(
+        MachineRepository(db),
     )
