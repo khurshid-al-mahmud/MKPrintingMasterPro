@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from app.api import customer
 from app.api import employee
 from app.api import machine
+from app.api import paper_type
 from app.api import party
 from app.api import print_partner
 from app.api import product
@@ -47,4 +48,8 @@ app.include_router(
 
 app.include_router(
     product.router,
+)
+
+app.include_router(
+    paper_type.router,
 )

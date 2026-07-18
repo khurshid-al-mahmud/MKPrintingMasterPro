@@ -13,6 +13,7 @@ from app.api.dependencies.database import get_db
 from app.repositories.customer_repository import CustomerRepository
 from app.repositories.employee_repository import EmployeeRepository
 from app.repositories.machine_repository import MachineRepository
+from app.repositories.paper_type_repository import PaperTypeRepository
 from app.repositories.party_repository import PartyRepository
 from app.repositories.print_partner_repository import PrintPartnerRepository
 from app.repositories.product_repository import ProductRepository
@@ -21,6 +22,7 @@ from app.repositories.supplier_repository import SupplierRepository
 from app.services.customer_service import CustomerService
 from app.services.employee_service import EmployeeService
 from app.services.machine_service import MachineService
+from app.services.paper_type_service import PaperTypeService
 from app.services.party_service import PartyService
 from app.services.print_partner_service import PrintPartnerService
 from app.services.product_service import ProductService
@@ -30,9 +32,7 @@ from app.services.supplier_service import SupplierService
 def get_party_service(
     db: Session = Depends(get_db),
 ) -> PartyService:
-    """
-    Provide PartyService dependency.
-    """
+    """Provide PartyService dependency."""
 
     return PartyService(
         PartyRepository(db),
@@ -42,9 +42,7 @@ def get_party_service(
 def get_supplier_service(
     db: Session = Depends(get_db),
 ) -> SupplierService:
-    """
-    Provide SupplierService dependency.
-    """
+    """Provide SupplierService dependency."""
 
     return SupplierService(
         SupplierRepository(db),
@@ -54,9 +52,7 @@ def get_supplier_service(
 def get_customer_service(
     db: Session = Depends(get_db),
 ) -> CustomerService:
-    """
-    Provide CustomerService dependency.
-    """
+    """Provide CustomerService dependency."""
 
     return CustomerService(
         CustomerRepository(db),
@@ -66,9 +62,7 @@ def get_customer_service(
 def get_employee_service(
     db: Session = Depends(get_db),
 ) -> EmployeeService:
-    """
-    Provide EmployeeService dependency.
-    """
+    """Provide EmployeeService dependency."""
 
     return EmployeeService(
         EmployeeRepository(db),
@@ -78,9 +72,7 @@ def get_employee_service(
 def get_print_partner_service(
     db: Session = Depends(get_db),
 ) -> PrintPartnerService:
-    """
-    Provide PrintPartnerService dependency.
-    """
+    """Provide PrintPartnerService dependency."""
 
     return PrintPartnerService(
         PrintPartnerRepository(db),
@@ -90,9 +82,7 @@ def get_print_partner_service(
 def get_machine_service(
     db: Session = Depends(get_db),
 ) -> MachineService:
-    """
-    Provide MachineService dependency.
-    """
+    """Provide MachineService dependency."""
 
     return MachineService(
         MachineRepository(db),
@@ -102,10 +92,18 @@ def get_machine_service(
 def get_product_service(
     db: Session = Depends(get_db),
 ) -> ProductService:
-    """
-    Provide ProductService dependency.
-    """
+    """Provide ProductService dependency."""
 
     return ProductService(
         ProductRepository(db),
+    )
+
+
+def get_paper_type_service(
+    db: Session = Depends(get_db),
+) -> PaperTypeService:
+    """Provide PaperTypeService dependency."""
+
+    return PaperTypeService(
+        PaperTypeRepository(db),
     )
