@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 
-from app.api import party, supplier
-
+from app.api import customer, party, supplier
 
 app = FastAPI(
     title="MKPrintingMasterPro ERP",
@@ -16,13 +15,17 @@ def root():
     }
 
 
-# Party API Router
+# Party API
 app.include_router(
     party.router,
 )
 
-
-# Supplier API Router
+# Supplier API
 app.include_router(
     supplier.router,
+)
+
+# Customer API
+app.include_router(
+    customer.router,
 )

@@ -120,9 +120,16 @@ class Party(Base):
         nullable=False,
     )
 
-    # One Party can have one Supplier Profile
+    # Supplier Profile
     supplier_profile = relationship(
         "SupplierProfile",
+        back_populates="party",
+        uselist=False,
+    )
+
+    # Customer Profile
+    customer_profile = relationship(
+        "CustomerProfile",
         back_populates="party",
         uselist=False,
     )

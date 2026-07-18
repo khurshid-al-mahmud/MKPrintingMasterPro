@@ -9,7 +9,7 @@ Every Customer Profile belongs to one Party.
 from decimal import Decimal
 
 from sqlalchemy import Boolean, ForeignKey, Numeric, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
 
@@ -26,7 +26,10 @@ class CustomerProfile(Base):
     )
 
     party_id: Mapped[int] = mapped_column(
-        ForeignKey("parties.id"),
+        ForeignKey(
+            "parties.id",
+            ondelete="CASCADE",
+        ),
         nullable=False,
         unique=True,
         index=True,
@@ -70,4 +73,9 @@ class CustomerProfile(Base):
         Boolean,
         default=True,
         nullable=False,
+    )
+
+    party = relationship(
+        "Party",
+        back_populates="customer_profile",
     )
