@@ -4,6 +4,8 @@ from app.api import customer
 from app.api import employee
 from app.api import party
 from app.api import supplier
+from app.api import print_partner
+
 
 app = FastAPI(
     title="MKPrintingMasterPro ERP",
@@ -32,4 +34,8 @@ app.include_router(
 
 app.include_router(
     employee.router,
+)
+
+app.include_router(
+    print_partner.router,
 )

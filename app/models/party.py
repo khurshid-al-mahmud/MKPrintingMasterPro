@@ -120,23 +120,46 @@ class Party(Base):
         nullable=False,
     )
 
+
+    # =========================
     # Supplier Profile
+    # =========================
+
     supplier_profile = relationship(
         "SupplierProfile",
         back_populates="party",
         uselist=False,
     )
 
+
+    # =========================
     # Customer Profile
+    # =========================
+
     customer_profile = relationship(
         "CustomerProfile",
         back_populates="party",
         uselist=False,
     )
 
+
+    # =========================
     # Employee Profile
+    # =========================
+
     employee_profile = relationship(
         "EmployeeProfile",
+        back_populates="party",
+        uselist=False,
+    )
+
+
+    # =========================
+    # Print Partner Profile
+    # =========================
+
+    print_partner_profile = relationship(
+        "PrintPartnerProfile",
         back_populates="party",
         uselist=False,
     )
