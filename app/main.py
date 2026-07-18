@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 
-from app.api import customer, party, supplier
+from app.api import customer
+from app.api import employee
+from app.api import party
+from app.api import supplier
 
 app = FastAPI(
     title="MKPrintingMasterPro ERP",
@@ -11,21 +14,22 @@ app = FastAPI(
 @app.get("/")
 def root():
     return {
-        "message": "MKPrintingMasterPro ERP API is running"
+        "message": "MKPrintingMasterPro ERP API is running",
     }
 
 
-# Party API
 app.include_router(
     party.router,
 )
 
-# Supplier API
 app.include_router(
     supplier.router,
 )
 
-# Customer API
 app.include_router(
     customer.router,
+)
+
+app.include_router(
+    employee.router,
 )

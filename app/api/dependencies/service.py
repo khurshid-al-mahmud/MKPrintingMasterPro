@@ -11,10 +11,12 @@ from sqlalchemy.orm import Session
 from app.api.dependencies.database import get_db
 
 from app.repositories.customer_repository import CustomerRepository
+from app.repositories.employee_repository import EmployeeRepository
 from app.repositories.party_repository import PartyRepository
 from app.repositories.supplier_repository import SupplierRepository
 
 from app.services.customer_service import CustomerService
+from app.services.employee_service import EmployeeService
 from app.services.party_service import PartyService
 from app.services.supplier_service import SupplierService
 
@@ -52,4 +54,16 @@ def get_customer_service(
 
     return CustomerService(
         CustomerRepository(db),
+    )
+
+
+def get_employee_service(
+    db: Session = Depends(get_db),
+) -> EmployeeService:
+    """
+    Provide EmployeeService dependency.
+    """
+
+    return EmployeeService(
+        EmployeeRepository(db),
     )

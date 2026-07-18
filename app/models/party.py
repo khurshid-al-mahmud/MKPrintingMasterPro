@@ -133,3 +133,10 @@ class Party(Base):
         back_populates="party",
         uselist=False,
     )
+
+    # Employee Profile
+    employee_profile = relationship(
+        "EmployeeProfile",
+        back_populates="party",
+        uselist=False,
+    )

@@ -6,8 +6,17 @@ Stores employee-specific information.
 Every Employee Profile belongs to one Party.
 """
 
-from sqlalchemy import Boolean, ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column
+from decimal import Decimal
+from datetime import date
+
+from sqlalchemy import Boolean
+from sqlalchemy import Date
+from sqlalchemy import ForeignKey
+from sqlalchemy import Numeric
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
 from app.models.base import Base
 
@@ -24,22 +33,20 @@ class EmployeeProfile(Base):
     )
 
     party_id: Mapped[int] = mapped_column(
-        ForeignKey("parties.id"),
+        ForeignKey(
+            "parties.id",
+            ondelete="CASCADE",
+        ),
         nullable=False,
         unique=True,
         index=True,
     )
 
-    employee_number: Mapped[str] = mapped_column(
+    employee_code: Mapped[str] = mapped_column(
         String(30),
         nullable=False,
         unique=True,
         index=True,
-    )
-
-    department: Mapped[str | None] = mapped_column(
-        String(100),
-        nullable=True,
     )
 
     designation: Mapped[str | None] = mapped_column(
@@ -47,19 +54,34 @@ class EmployeeProfile(Base):
         nullable=True,
     )
 
-    joining_date: Mapped[str | None] = mapped_column(
-        String(20),
+    department: Mapped[str | None] = mapped_column(
+        String(100),
         nullable=True,
     )
 
-    employment_status: Mapped[str] = mapped_column(
-        String(50),
-        default="Active",
+    joining_date: Mapped[date | None] = mapped_column(
+        Date,
+        nullable=True,
+    )
+
+    salary: Mapped[Decimal] = mapped_column(
+        Numeric(12, 2),
+        default=Decimal("0.00"),
         nullable=False,
+    )
+
+    employment_type: Mapped[str | None] = mapped_column(
+        String(50),
+        nullable=True,
     )
 
     is_active: Mapped[bool] = mapped_column(
         Boolean,
         default=True,
         nullable=False,
+    )
+
+    party = relationship(
+        "Party",
+        back_populates="employee_profile",
     )
