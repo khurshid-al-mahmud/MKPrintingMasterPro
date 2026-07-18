@@ -11,7 +11,7 @@ starts as a Party.
 from datetime import datetime
 
 from sqlalchemy import Boolean, DateTime, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
 
@@ -29,6 +29,7 @@ class Party(Base):
 
     party_type: Mapped[str] = mapped_column(
         String(30),
+        default="CUSTOMER",
         nullable=False,
     )
 
@@ -117,4 +118,11 @@ class Party(Base):
         default=datetime.utcnow,
         onupdate=datetime.utcnow,
         nullable=False,
+    )
+
+    # One Party can have one Supplier Profile
+    supplier_profile = relationship(
+        "SupplierProfile",
+        back_populates="party",
+        uselist=False,
     )

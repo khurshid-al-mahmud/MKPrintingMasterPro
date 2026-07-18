@@ -1,68 +1,53 @@
 """
 Supplier Profile Model.
 
-Stores supplier-specific information.
-
-Every Supplier Profile belongs to one Party.
+ERP Supplier Information.
 """
 
-from sqlalchemy import (
-    Boolean,
-    ForeignKey,
-    Integer,
-    String,
-)
-from sqlalchemy.orm import (
-    Mapped,
-    mapped_column,
-)
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
-from app.models.base import Base
+from app.models.base import BaseModel
 
 
-class SupplierProfile(Base):
-    """Supplier Profile."""
+class SupplierProfile(BaseModel):
+    """
+    Supplier profile table.
+    """
 
     __tablename__ = "supplier_profiles"
 
-    id: Mapped[int] = mapped_column(
-        Integer,
-        primary_key=True,
-        index=True,
-    )
-
     party_id: Mapped[int] = mapped_column(
-        ForeignKey("parties.id"),
+        ForeignKey(
+            "parties.id",
+            ondelete="CASCADE",
+        ),
+        unique=True,
         nullable=False,
+    )
+
+    supplier_code: Mapped[str] = mapped_column(
         unique=True,
         index=True,
     )
 
-    supplier_number: Mapped[str] = mapped_column(
-        String(30),
-        nullable=False,
-        unique=True,
-        index=True,
+    trade_license: Mapped[str | None]
+
+    vat_number: Mapped[str | None]
+
+    tin_number: Mapped[str | None]
+
+    credit_limit: Mapped[float] = mapped_column(
+        default=0,
     )
 
-    supplier_category: Mapped[str | None] = mapped_column(
-        String(100),
-        nullable=True,
+    current_balance: Mapped[float] = mapped_column(
+        default=0,
     )
 
-    payment_terms: Mapped[str | None] = mapped_column(
-        String(200),
-        nullable=True,
-    )
-
-    preferred_supplier: Mapped[bool] = mapped_column(
-        Boolean,
-        default=False,
-        nullable=False,
-    )
-
-    is_active: Mapped[bool] = mapped_column(
-        Boolean,
-        default=True,
-        nullable=False,
+    party = relationship(
+        "Party",
+        back_populates="supplier_profile",
     )

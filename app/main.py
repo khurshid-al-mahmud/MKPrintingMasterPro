@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 
+from app.api import party, supplier
+
+
 app = FastAPI(
     title="MKPrintingMasterPro ERP",
     version="0.1.0",
@@ -11,3 +14,15 @@ def root():
     return {
         "message": "MKPrintingMasterPro ERP API is running"
     }
+
+
+# Party API Router
+app.include_router(
+    party.router,
+)
+
+
+# Supplier API Router
+app.include_router(
+    supplier.router,
+)
