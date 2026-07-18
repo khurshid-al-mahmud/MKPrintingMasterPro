@@ -15,6 +15,7 @@ from app.repositories.employee_repository import EmployeeRepository
 from app.repositories.machine_repository import MachineRepository
 from app.repositories.party_repository import PartyRepository
 from app.repositories.print_partner_repository import PrintPartnerRepository
+from app.repositories.product_repository import ProductRepository
 from app.repositories.supplier_repository import SupplierRepository
 
 from app.services.customer_service import CustomerService
@@ -22,6 +23,7 @@ from app.services.employee_service import EmployeeService
 from app.services.machine_service import MachineService
 from app.services.party_service import PartyService
 from app.services.print_partner_service import PrintPartnerService
+from app.services.product_service import ProductService
 from app.services.supplier_service import SupplierService
 
 
@@ -94,4 +96,16 @@ def get_machine_service(
 
     return MachineService(
         MachineRepository(db),
+    )
+
+
+def get_product_service(
+    db: Session = Depends(get_db),
+) -> ProductService:
+    """
+    Provide ProductService dependency.
+    """
+
+    return ProductService(
+        ProductRepository(db),
     )

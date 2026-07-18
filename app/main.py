@@ -5,6 +5,7 @@ from app.api import employee
 from app.api import machine
 from app.api import party
 from app.api import print_partner
+from app.api import product
 from app.api import supplier
 
 app = FastAPI(
@@ -42,4 +43,8 @@ app.include_router(
 
 app.include_router(
     machine.router,
+)
+
+app.include_router(
+    product.router,
 )
