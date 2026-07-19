@@ -13,6 +13,7 @@ from app.api.dependencies.database import get_db
 from app.repositories.customer_repository import CustomerRepository
 from app.repositories.employee_repository import EmployeeRepository
 from app.repositories.machine_repository import MachineRepository
+from app.repositories.paper_brand_repository import PaperBrandRepository
 from app.repositories.paper_type_repository import PaperTypeRepository
 from app.repositories.party_repository import PartyRepository
 from app.repositories.print_partner_repository import PrintPartnerRepository
@@ -22,6 +23,7 @@ from app.repositories.supplier_repository import SupplierRepository
 from app.services.customer_service import CustomerService
 from app.services.employee_service import EmployeeService
 from app.services.machine_service import MachineService
+from app.services.paper_brand_service import PaperBrandService
 from app.services.paper_type_service import PaperTypeService
 from app.services.party_service import PartyService
 from app.services.print_partner_service import PrintPartnerService
@@ -106,4 +108,14 @@ def get_paper_type_service(
 
     return PaperTypeService(
         PaperTypeRepository(db),
+    )
+
+
+def get_paper_brand_service(
+    db: Session = Depends(get_db),
+) -> PaperBrandService:
+    """Provide PaperBrandService dependency."""
+
+    return PaperBrandService(
+        PaperBrandRepository(db),
     )
