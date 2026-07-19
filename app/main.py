@@ -4,6 +4,7 @@ from app.api import customer
 from app.api import employee
 from app.api import machine
 from app.api import paper_brand
+from app.api import paper_gsm
 from app.api import paper_type
 from app.api import party
 from app.api import print_partner
@@ -57,4 +58,8 @@ app.include_router(
 
 app.include_router(
     paper_brand.router,
+)
+
+app.include_router(
+    paper_gsm.router,
 )
