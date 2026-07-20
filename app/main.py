@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import FastAPI
 
 from app.api import customer
@@ -5,6 +7,7 @@ from app.api import employee
 from app.api import machine
 from app.api import paper_brand
 from app.api import paper_gsm
+from app.api import paper_size
 from app.api import paper_type
 from app.api import party
 from app.api import print_partner
@@ -16,6 +19,8 @@ app = FastAPI(
     version="0.1.0",
 )
 
+logging.basicConfig(level=logging.DEBUG)
+
 
 @app.get("/")
 def root():
@@ -24,42 +29,14 @@ def root():
     }
 
 
-app.include_router(
-    party.router,
-)
-
-app.include_router(
-    supplier.router,
-)
-
-app.include_router(
-    customer.router,
-)
-
-app.include_router(
-    employee.router,
-)
-
-app.include_router(
-    print_partner.router,
-)
-
-app.include_router(
-    machine.router,
-)
-
-app.include_router(
-    product.router,
-)
-
-app.include_router(
-    paper_type.router,
-)
-
-app.include_router(
-    paper_brand.router,
-)
-
-app.include_router(
-    paper_gsm.router,
-)
+app.include_router(party.router)
+app.include_router(supplier.router)
+app.include_router(customer.router)
+app.include_router(employee.router)
+app.include_router(print_partner.router)
+app.include_router(machine.router)
+app.include_router(product.router)
+app.include_router(paper_type.router)
+app.include_router(paper_brand.router)
+app.include_router(paper_gsm.router)
+app.include_router(paper_size.router)

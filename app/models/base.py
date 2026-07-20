@@ -1,16 +1,25 @@
+"""
+Enterprise Base Model.
+
+Common Base classes for every ERP table.
+"""
+
 from datetime import datetime
 
 from sqlalchemy import Boolean, DateTime
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 
 
 class Base(DeclarativeBase):
-    """Base class for all database models."""
+    """Base class for all SQLAlchemy models."""
+
     pass
 
 
 class BaseModel(Base):
-    """Common fields for all ERP tables."""
+    """Common fields for every ERP table."""
 
     __abstract__ = True
 

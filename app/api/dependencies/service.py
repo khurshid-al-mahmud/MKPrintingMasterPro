@@ -15,6 +15,7 @@ from app.repositories.employee_repository import EmployeeRepository
 from app.repositories.machine_repository import MachineRepository
 from app.repositories.paper_brand_repository import PaperBrandRepository
 from app.repositories.paper_gsm_repository import PaperGSMRepository
+from app.repositories.paper_size_repository import PaperSizeRepository
 from app.repositories.paper_type_repository import PaperTypeRepository
 from app.repositories.party_repository import PartyRepository
 from app.repositories.print_partner_repository import PrintPartnerRepository
@@ -26,6 +27,7 @@ from app.services.employee_service import EmployeeService
 from app.services.machine_service import MachineService
 from app.services.paper_brand_service import PaperBrandService
 from app.services.paper_gsm_service import PaperGSMService
+from app.services.paper_size_service import PaperSizeService
 from app.services.paper_type_service import PaperTypeService
 from app.services.party_service import PartyService
 from app.services.print_partner_service import PrintPartnerService
@@ -130,4 +132,14 @@ def get_paper_gsm_service(
 
     return PaperGSMService(
         PaperGSMRepository(db),
+    )
+
+
+def get_paper_size_service(
+    db: Session = Depends(get_db),
+) -> PaperSizeService:
+    """Provide PaperSizeService dependency."""
+
+    return PaperSizeService(
+        PaperSizeRepository(db),
     )
