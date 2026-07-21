@@ -20,7 +20,7 @@ class PaperBrandService:
         """Create Paper Brand."""
 
         existing_code = self.repository.get_by_code(
-            paper_brand.brand_code
+            paper_brand.paper_brand_code
         )
 
         if existing_code:
@@ -29,7 +29,7 @@ class PaperBrandService:
             )
 
         existing_name = self.repository.get_by_name(
-            paper_brand.brand_name
+            paper_brand.paper_brand_name
         )
 
         if existing_name:
@@ -80,12 +80,12 @@ class PaperBrandService:
             )
 
         if (
-            paper_brand.brand_code
-            and paper_brand.brand_code
-            != db_paper_brand.brand_code
+            paper_brand.paper_brand_code
+            and paper_brand.paper_brand_code
+            != db_paper_brand.paper_brand_code
         ):
             existing_code = self.repository.get_by_code(
-                paper_brand.brand_code
+                paper_brand.paper_brand_code
             )
 
             if existing_code:
@@ -94,12 +94,12 @@ class PaperBrandService:
                 )
 
         if (
-            paper_brand.brand_name
-            and paper_brand.brand_name
-            != db_paper_brand.brand_name
+            paper_brand.paper_brand_name
+            and paper_brand.paper_brand_name
+            != db_paper_brand.paper_brand_name
         ):
             existing_name = self.repository.get_by_name(
-                paper_brand.brand_name
+                paper_brand.paper_brand_name
             )
 
             if existing_name:

@@ -15,24 +15,14 @@ from pydantic import Field
 class PaperBrandBase(BaseModel):
     """Base Paper Brand Schema."""
 
-    brand_code: str = Field(
+    paper_brand_code: str = Field(
         ...,
         max_length=30,
     )
 
-    brand_name: str = Field(
+    paper_brand_name: str = Field(
         ...,
         max_length=150,
-    )
-
-    manufacturer: str | None = Field(
-        default=None,
-        max_length=150,
-    )
-
-    country: str | None = Field(
-        default=None,
-        max_length=100,
     )
 
     display_order: int = Field(
@@ -52,24 +42,14 @@ class PaperBrandCreate(PaperBrandBase):
 class PaperBrandUpdate(BaseModel):
     """Update Paper Brand Schema."""
 
-    brand_code: str | None = Field(
+    paper_brand_code: str | None = Field(
         default=None,
         max_length=30,
     )
 
-    brand_name: str | None = Field(
+    paper_brand_name: str | None = Field(
         default=None,
         max_length=150,
-    )
-
-    manufacturer: str | None = Field(
-        default=None,
-        max_length=150,
-    )
-
-    country: str | None = Field(
-        default=None,
-        max_length=100,
     )
 
     display_order: int | None = Field(

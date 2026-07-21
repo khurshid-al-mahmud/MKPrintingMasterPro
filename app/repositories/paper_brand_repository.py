@@ -42,7 +42,7 @@ class PaperBrandRepository:
             self.db.query(PaperBrand)
             .order_by(
                 PaperBrand.display_order,
-                PaperBrand.brand_name,
+                PaperBrand.paper_brand_name,
             )
             .all()
         )
@@ -57,7 +57,7 @@ class PaperBrandRepository:
             )
             .order_by(
                 PaperBrand.display_order,
-                PaperBrand.brand_name,
+                PaperBrand.paper_brand_name,
             )
             .all()
         )
@@ -78,28 +78,28 @@ class PaperBrandRepository:
 
     def get_by_code(
         self,
-        brand_code: str,
+        paper_brand_code: str,
     ) -> PaperBrand | None:
         """Get Paper Brand by Code."""
 
         return (
             self.db.query(PaperBrand)
             .filter(
-                PaperBrand.brand_code == brand_code
+                PaperBrand.paper_brand_code == paper_brand_code
             )
             .first()
         )
 
     def get_by_name(
         self,
-        brand_name: str,
+        paper_brand_name: str,
     ) -> PaperBrand | None:
         """Get Paper Brand by Name."""
 
         return (
             self.db.query(PaperBrand)
             .filter(
-                PaperBrand.brand_name == brand_name
+                PaperBrand.paper_brand_name == paper_brand_name
             )
             .first()
         )
@@ -146,23 +146,17 @@ class PaperBrandRepository:
             self.db.query(PaperBrand)
             .filter(
                 or_(
-                    PaperBrand.brand_code.ilike(
+                    PaperBrand.paper_brand_code.ilike(
                         f"%{keyword}%"
                     ),
-                    PaperBrand.brand_name.ilike(
-                        f"%{keyword}%"
-                    ),
-                    PaperBrand.manufacturer.ilike(
-                        f"%{keyword}%"
-                    ),
-                    PaperBrand.country.ilike(
+                    PaperBrand.paper_brand_name.ilike(
                         f"%{keyword}%"
                     ),
                 )
             )
             .order_by(
                 PaperBrand.display_order,
-                PaperBrand.brand_name,
+                PaperBrand.paper_brand_name,
             )
             .all()
         )
