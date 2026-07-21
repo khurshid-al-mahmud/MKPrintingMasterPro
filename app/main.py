@@ -2,6 +2,7 @@ import logging
 
 from fastapi import FastAPI
 
+from app.api import binding_type
 from app.api import customer
 from app.api import employee
 from app.api import machine
@@ -40,3 +41,4 @@ app.include_router(paper_type.router)
 app.include_router(paper_brand.router)
 app.include_router(paper_gsm.router)
 app.include_router(paper_size.router)
+app.include_router(binding_type.router)

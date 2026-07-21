@@ -6,5 +6,5 @@ from app.models.print_partner_profile import PrintPartnerProfile
 from app.models.party_contact import PartyContact
 from app.models.party_role import PartyRole
 from app.models.number_sequence import NumberSequence
-
 from app.models.paper_size import PaperSize
+from app.models.binding_type import BindingType
