@@ -14,6 +14,7 @@ from app.api import party
 from app.api import print_partner
 from app.api import product
 from app.api import supplier
+from app.api import system_setting
 
 app = FastAPI(
     title="MKPrintingMasterPro ERP",
@@ -42,3 +43,4 @@ app.include_router(paper_brand.router)
 app.include_router(paper_gsm.router)
 app.include_router(paper_size.router)
 app.include_router(binding_type.router)
+app.include_router(system_setting.router)

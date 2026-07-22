@@ -6,6 +6,10 @@ from sqlalchemy import engine_from_config, pool
 from app.core.config import settings
 from app.database.engine import Base
 
+# IMPORTANT:
+# Import all models so that Base.metadata knows every table.
+import app.models
+
 config = context.config
 
 config.set_main_option("sqlalchemy.url", settings.database_url)

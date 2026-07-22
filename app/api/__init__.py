@@ -1,0 +1,13 @@
+from .binding_type import router as binding_type_router
+from .customer import router as customer_router
+from .employee import router as employee_router
+from .machine import router as machine_router
+from .paper_brand import router as paper_brand_router
+from .paper_gsm import router as paper_gsm_router
+from .paper_size import router as paper_size_router
+from .paper_type import router as paper_type_router
+from .party import router as party_router
+from .print_partner import router as print_partner_router
+from .product import router as product_router
+from .supplier import router as supplier_router
+from .system_setting import router as system_setting_router

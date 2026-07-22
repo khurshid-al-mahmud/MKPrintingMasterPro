@@ -1,3 +1,9 @@
+"""
+Import all SQLAlchemy models.
+
+This ensures all models are registered with Base.metadata.
+"""
+
 from app.models.binding_type import BindingType
 from app.models.customer_profile import CustomerProfile
 from app.models.employee_profile import EmployeeProfile
@@ -13,6 +19,7 @@ from app.models.party_role import PartyRole
 from app.models.print_partner_profile import PrintPartnerProfile
 from app.models.product import Product
 from app.models.supplier_profile import SupplierProfile
+from app.models.system_setting import SystemSetting
 
 __all__ = [
     "BindingType",
@@ -30,4 +37,5 @@ __all__ = [
     "PrintPartnerProfile",
     "Product",
     "SupplierProfile",
+    "SystemSetting",
 ]
