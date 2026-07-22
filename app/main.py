@@ -32,17 +32,34 @@ def root():
     }
 
 
+# ===========================
+# Master Modules
+# ===========================
+
 app.include_router(party.router)
+
 app.include_router(supplier.router)
+
 app.include_router(customer.router)
+
 app.include_router(employee.router)
+
 app.include_router(print_partner.router)
-app.include_router(machine.router)
+
 app.include_router(product.router)
-app.include_router(paper_type.router)
-app.include_router(paper_brand.router)
-app.include_router(paper_gsm.router)
-app.include_router(paper_size.router)
-app.include_router(binding_type.router)
-app.include_router(system_setting.router)
+
+app.include_router(machine.router)
+
 app.include_router(company_profile.router)
+
+app.include_router(system_setting.router)
+
+app.include_router(paper_type.router)
+
+app.include_router(paper_brand.router)
+
+app.include_router(paper_gsm.router)
+
+app.include_router(paper_size.router)
+
+app.include_router(binding_type.router)

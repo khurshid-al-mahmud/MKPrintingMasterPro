@@ -1,180 +1,128 @@
 """
-Machine Repository.
+Machine Repository
 
-Database access layer
-for Machine Management.
+Build-012
 """
 
-from sqlalchemy import or_
+from sqlalchemy.orm import Session
 
 from app.models.machine import Machine
+from app.schemas.machine import (
+    MachineCreate,
+    MachineUpdate,
+)
 
 
 class MachineRepository:
-    """
-    Repository for Machine.
-    """
 
     def __init__(
         self,
-        db,
+        db: Session,
     ):
         self.db = db
 
     def create(
         self,
-        machine: Machine,
-    ) -> Machine:
+        machine: MachineCreate,
+    ):
 
-        self.db.add(
-            machine,
+        db_machine = Machine(
+            **machine.model_dump()
         )
 
+        self.db.add(db_machine)
         self.db.commit()
+        self.db.refresh(db_machine)
 
-        self.db.refresh(
-            machine,
+        return db_machine
+
+    def get_all(self):
+
+        return (
+            self.db.query(Machine)
+            .order_by(Machine.machine_name)
+            .all()
         )
 
-        return machine
+    def get_active(self):
+
+        return (
+            self.db.query(Machine)
+            .filter(
+                Machine.is_active.is_(True)
+            )
+            .order_by(Machine.machine_name)
+            .all()
+        )
 
     def get_by_id(
         self,
         machine_id: int,
-    ) -> Machine | None:
+    ):
 
         return (
-            self.db.query(
-                Machine,
-            )
+            self.db.query(Machine)
             .filter(
-                Machine.id == machine_id,
-                Machine.is_active == True,
+                Machine.id == machine_id
             )
             .first()
         )
 
-    def get_all(
+    def get_by_code(
         self,
-    ) -> list[Machine]:
+        machine_code: str,
+    ):
 
         return (
-            self.db.query(
-                Machine,
-            )
+            self.db.query(Machine)
             .filter(
-                Machine.is_active == True,
+                Machine.machine_code == machine_code
             )
-            .all()
+            .first()
         )
 
     def update(
         self,
-        machine_id: int,
-        machine_data: dict,
-    ) -> Machine | None:
+        db_machine: Machine,
+        machine: MachineUpdate,
+    ):
 
-        machine = self.get_by_id(
-            machine_id,
+        update_data = machine.model_dump(
+            exclude_unset=True
         )
 
-        if machine is None:
-            return None
-
-        for key, value in machine_data.items():
+        for key, value in update_data.items():
             setattr(
-                machine,
+                db_machine,
                 key,
                 value,
             )
 
         self.db.commit()
+        self.db.refresh(db_machine)
 
-        self.db.refresh(
-            machine,
-        )
+        return db_machine
 
-        return machine
-
-    def soft_delete(
+    def delete(
         self,
-        machine_id: int,
-    ) -> bool:
+        db_machine: Machine,
+    ):
 
-        machine = self.get_by_id(
-            machine_id,
-        )
-
-        if machine is None:
-            return False
-
-        machine.is_active = False
-
+        self.db.delete(db_machine)
         self.db.commit()
-
-        return True
 
     def search(
         self,
         keyword: str,
-    ) -> list[Machine]:
+    ):
 
         return (
-            self.db.query(
-                Machine,
-            )
+            self.db.query(Machine)
             .filter(
-                Machine.is_active == True,
-            )
-            .filter(
-                or_(
-                    Machine.machine_name.ilike(
-                        f"%{keyword}%",
-                    ),
-                    Machine.machine_code.ilike(
-                        f"%{keyword}%",
-                    ),
-                    Machine.machine_type.ilike(
-                        f"%{keyword}%",
-                    ),
-                    Machine.manufacturer.ilike(
-                        f"%{keyword}%",
-                    ),
+                Machine.machine_name.ilike(
+                    f"%{keyword}%"
                 )
             )
+            .order_by(Machine.machine_name)
             .all()
-        )
-
-    def exists_by_machine_code(
-        self,
-        machine_code: str,
-    ) -> bool:
-
-        return (
-            self.db.query(
-                Machine,
-            )
-            .filter(
-                Machine.machine_code == machine_code,
-                Machine.is_active == True,
-            )
-            .first()
-            is not None
-        )
-
-    def exists_by_machine_name(
-        self,
-        machine_name: str,
-    ) -> bool:
-
-        return (
-            self.db.query(
-                Machine,
-            )
-            .filter(
-                Machine.machine_name == machine_name,
-                Machine.is_active == True,
-            )
-            .first()
-            is not None
         )

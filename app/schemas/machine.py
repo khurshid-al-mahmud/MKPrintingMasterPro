@@ -1,72 +1,107 @@
 """
-Machine Pydantic Schemas.
+Machine Schema
 
-Request and Response Models
-for Machine API.
+Build-012
 """
 
+from datetime import date
 from datetime import datetime
+from decimal import Decimal
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
 class MachineBase(BaseModel):
-    """
-    Common Machine Fields.
-    """
-
     machine_code: str
     machine_name: str
     machine_type: str
+
     manufacturer: str | None = None
     model: str | None = None
-    max_sheet_size: str | None = None
-    max_print_width: float | None = None
-    max_print_length: float | None = None
+
+    serial_number: str | None = None
+    asset_number: str | None = None
+
+    machine_location: str | None = None
+    operator_name: str | None = None
+
+    max_paper_width: Decimal | None = None
+    max_paper_height: Decimal | None = None
+
+    minimum_gsm: int | None = None
+    maximum_gsm: int | None = None
+
     color_capacity: int | None = None
-    production_speed: int | None = None
-    hourly_running_cost: float = 0
+
+    printing_speed: int | None = None
+
+    hourly_running_cost: Decimal = Decimal("0.00")
+
+    electric_consumption_kw: Decimal | None = None
+
+    purchase_date: date | None = None
+    installation_date: date | None = None
+
+    last_maintenance_date: date | None = None
+    next_maintenance_date: date | None = None
+
+    status: str = "Running"
+
     remarks: str | None = None
+
+    is_active: bool = True
 
 
 class MachineCreate(MachineBase):
-    """
-    Create Machine Schema.
-    """
-
     pass
 
 
 class MachineUpdate(BaseModel):
-    """
-    Update Machine Schema.
-    """
-
-    machine_code: str | None = None
     machine_name: str | None = None
     machine_type: str | None = None
+
     manufacturer: str | None = None
     model: str | None = None
-    max_sheet_size: str | None = None
-    max_print_width: float | None = None
-    max_print_length: float | None = None
+
+    serial_number: str | None = None
+    asset_number: str | None = None
+
+    machine_location: str | None = None
+    operator_name: str | None = None
+
+    max_paper_width: Decimal | None = None
+    max_paper_height: Decimal | None = None
+
+    minimum_gsm: int | None = None
+    maximum_gsm: int | None = None
+
     color_capacity: int | None = None
-    production_speed: int | None = None
-    hourly_running_cost: float | None = None
+
+    printing_speed: int | None = None
+
+    hourly_running_cost: Decimal | None = None
+
+    electric_consumption_kw: Decimal | None = None
+
+    purchase_date: date | None = None
+    installation_date: date | None = None
+
+    last_maintenance_date: date | None = None
+    next_maintenance_date: date | None = None
+
+    status: str | None = None
+
     remarks: str | None = None
+
     is_active: bool | None = None
 
 
 class MachineResponse(MachineBase):
-    """
-    Machine Response Schema.
-    """
-
     id: int
-    is_active: bool
+
     created_at: datetime
-    updated_at: datetime | None = None
+    updated_at: datetime
 
     model_config = ConfigDict(
         from_attributes=True,
