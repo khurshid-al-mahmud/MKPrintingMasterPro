@@ -5,6 +5,7 @@ This ensures all models are registered with Base.metadata.
 """
 
 from app.models.binding_type import BindingType
+from app.models.company_profile import CompanyProfile
 from app.models.customer_profile import CustomerProfile
 from app.models.employee_profile import EmployeeProfile
 from app.models.machine import Machine
@@ -23,6 +24,7 @@ from app.models.system_setting import SystemSetting
 
 __all__ = [
     "BindingType",
+    "CompanyProfile",
     "CustomerProfile",
     "EmployeeProfile",
     "Machine",
