@@ -210,8 +210,14 @@ class SpecificationField(Base):
         cascade="all, delete-orphan"
     )
 
-    template_mapping = relationship(
+    template_mappings = relationship(
         "TemplateFieldMapping",
+        back_populates="field",
+        cascade="all, delete-orphan"
+    )
+
+    validation_rules = relationship(
+        "ValidationRule",
         back_populates="field",
         cascade="all, delete-orphan"
     )

@@ -191,7 +191,7 @@ class TemplateFieldMapping(Base):
 
     field = relationship(
         "SpecificationField",
-        back_populates="template_mapping"
+        back_populates="template_mappings"
     )
 
     def __repr__(self):

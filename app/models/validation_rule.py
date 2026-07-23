@@ -136,11 +136,12 @@ class ValidationRule(Base):
     # Relationship
     # -------------------------------------
 
-    field = relationship(
-        "SpecificationField"
-    )
+field = relationship(
+    "SpecificationField",
+    back_populates="validation_rules"
+)
 
-    def __repr__(self):
+def __repr__(self):
 
         return (
             f"<ValidationRule("

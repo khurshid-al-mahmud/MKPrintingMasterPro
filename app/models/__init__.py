@@ -1,25 +1,43 @@
-from app.models.party import Party
-from app.models.party_role import PartyRole
-from app.models.party_contact import PartyContact
+"""
+MKPrintingMasterPro ERP
 
-from app.models.customer_profile import CustomerProfile
-from app.models.supplier_profile import SupplierProfile
-from app.models.employee_profile import EmployeeProfile
-from app.models.print_partner_profile import PrintPartnerProfile
+Central Model Registry
 
-from app.models.number_sequence import NumberSequence
+Build-014
+"""
 
-from app.models.product import Product
+from .product_template import ProductTemplate
+from .specification_group import SpecificationGroup
+from .specification_field import SpecificationField
+from .field_option import FieldOption
+from .template_field_mapping import TemplateFieldMapping
+from .specification_dependency_rule import SpecificationDependencyRule
+from .formula_rule import FormulaRule
+from .template_version import TemplateVersion
+from .specification_audit import SpecificationAudit
+from .validation_rule import ValidationRule
 
-from app.models.paper_type import PaperType
-from app.models.paper_brand import PaperBrand
-from app.models.paper_gsm import PaperGSM
-from app.models.paper_size import PaperSize
 
-from app.models.binding_type import BindingType
+__all__ = [
 
-from app.models.system_setting import SystemSetting
+    "ProductTemplate",
 
-from app.models.company_profile import CompanyProfile
+    "SpecificationGroup",
 
-from app.models.machine import Machine
+    "SpecificationField",
+
+    "FieldOption",
+
+    "TemplateFieldMapping",
+
+    "SpecificationDependencyRule",
+
+    "FormulaRule",
+
+    "TemplateVersion",
+
+    "SpecificationAudit",
+
+    "ValidationRule",
+
+]

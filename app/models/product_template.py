@@ -142,6 +142,12 @@ class ProductTemplate(Base):
         cascade="all, delete-orphan"
     )
 
+    template_versions = relationship(
+        "TemplateVersion",
+        back_populates="template",
+        cascade="all, delete-orphan"
+    )
+
     def __repr__(self):
         return (
             f"<ProductTemplate("
