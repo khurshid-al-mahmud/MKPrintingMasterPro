@@ -1,7 +1,6 @@
 """
 MKPrintingMasterPro ERP
 Build-016B
-Commit-01
 
 Runtime Quotation Engine
 
@@ -9,11 +8,10 @@ Purpose:
 Enterprise Runtime Coordinator
 
 Status:
-Compile Ready
+Build-016B Commit-02
 """
 
 from typing import Dict
-
 from sqlalchemy.orm import Session
 
 from app.services.dynamic_specification_service import (
@@ -56,7 +54,6 @@ class RuntimeQuotationEngine:
 
         self.formula_engine = FormulaEngine(db)
 
-        # Build-016 বর্তমানে এই দুইটি Engine db গ্রহণ করে না
         self.cost_engine = CostEngine()
 
         self.pricing_engine = PricingEngine()
@@ -72,24 +69,103 @@ class RuntimeQuotationEngine:
     ):
 
         """
-        Build-016B Commit-01
-
-        Skeleton Only
-
         Runtime Pipeline
-        will be added in Commit-02.
+
+        Template
+            ↓
+        Validation
+            ↓
+        Dependency
+            ↓
+        Formula
+            ↓
+        Cost
+            ↓
+        Pricing
+            ↓
+        Runtime JSON
         """
 
-        return {
+        # -------------------------------
+        # Load Template
+        # -------------------------------
 
-            "success": True,
+        runtime = self.specification_service.load_template(
+            template_id
+        )
 
-            "build": "016B",
+        if runtime is None:
 
-            "commit": "01",
+            return {
+                "success": False,
+                "message": "Template Not Found",
+                "template_id": template_id,
+            }
 
-            "template_id": template_id,
+        # -------------------------------
+        # Validation
+        # -------------------------------
 
-            "values": values,
-
+        validation_result = {
+            "is_valid": True,
+            "errors": [],
         }
+
+        # -------------------------------
+        # Dependency
+        # -------------------------------
+
+        dependency_result = self.dependency_engine.evaluate(
+            template_id,
+            values,
+        )
+
+        # -------------------------------
+        # Formula
+        # -------------------------------
+
+        formula_result = self.formula_engine.calculate_all(
+            template_id,
+            values,
+        )
+
+        # -------------------------------
+        # Cost
+        # -------------------------------
+
+        self.cost_engine.reset()
+
+        # Future Build:
+        # Formula Result থেকে Cost Populate হবে
+
+        cost_result = self.cost_engine.export()
+
+        # -------------------------------
+        # Pricing
+        # -------------------------------
+
+        self.pricing_engine.reset()
+
+        self.pricing_engine.set_cost(
+            cost_result["total_cost"]
+        )
+
+        pricing_result = self.pricing_engine.export()
+
+        # -------------------------------
+        # Runtime JSON
+        # -------------------------------
+
+        result = {
+            "success": True,
+            "build": "016B",
+            "template": runtime,
+            "validation": validation_result,
+            "dependency": dependency_result,
+            "formula": formula_result,
+            "cost": cost_result,
+            "pricing": pricing_result,
+            "values": values,
+        }
+
+        return result

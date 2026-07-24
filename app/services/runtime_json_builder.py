@@ -1,15 +1,15 @@
 """
 MKPrintingMasterPro ERP
-Build-015B
+Build-016B
 
 Runtime JSON Builder
 
 Purpose:
-Converts Dynamic Runtime Objects into
-Frontend / API / AI Ready JSON.
+Build Final Runtime JSON
+for ERP / API / AI Assistant
 
 Status:
-Production Ready
+Build-016 Freeze
 """
 
 from typing import Any
@@ -21,9 +21,17 @@ class RuntimeJSONBuilder:
     # Build Complete Runtime JSON
     # --------------------------------------------------
 
-    def build(self, runtime_data: dict) -> dict:
+    def build(
+        self,
+        runtime_data: dict,
+    ) -> dict:
 
         return {
+
+            "success": runtime_data.get(
+                "success",
+                True,
+            ),
 
             "template": self.build_template(
 
@@ -39,13 +47,13 @@ class RuntimeJSONBuilder:
 
             ],
 
-            "validation_errors":
+            "validation":
 
                 runtime_data.get(
 
-                    "validation_errors",
+                    "validation",
 
-                    []
+                    {}
 
                 ),
 
@@ -69,35 +77,78 @@ class RuntimeJSONBuilder:
 
                 ),
 
+            "cost":
+
+                runtime_data.get(
+
+                    "cost",
+
+                    {}
+
+                ),
+
+            "pricing":
+
+                runtime_data.get(
+
+                    "pricing",
+
+                    {}
+
+                ),
+
+            "quotation":
+
+                runtime_data.get(
+
+                    "quotation",
+
+                    {}
+
+                ),
+
         }
 
     # --------------------------------------------------
     # Template
     # --------------------------------------------------
 
-    def build_template(self, template) -> dict:
+    def build_template(
+        self,
+        template,
+    ) -> dict:
 
         return {
 
-            "id": template.id,
+            "id": getattr(
+                template,
+                "id",
+                None,
+            ),
 
-            "template_code": template.template_code,
+            "template_code": getattr(
+                template,
+                "template_code",
+                None,
+            ),
 
-            "template_name_en": template.template_name_en,
+            "template_name_en": getattr(
+                template,
+                "template_name_en",
+                None,
+            ),
 
-            "template_name_bn": template.template_name_bn,
+            "template_name_bn": getattr(
+                template,
+                "template_name_bn",
+                None,
+            ),
 
-            "version":
-
-                getattr(
-
-                    template,
-
-                    "current_version",
-
-                    None,
-
-                ),
+            "version": getattr(
+                template,
+                "current_version",
+                None,
+            ),
 
         }
 
@@ -105,29 +156,49 @@ class RuntimeJSONBuilder:
     # Group
     # --------------------------------------------------
 
-    def build_group(self, group_data: dict) -> dict:
+    def build_group(
+        self,
+        group_data,
+    ):
 
         group = group_data["group"]
 
         return {
 
-            "id": group.id,
+            "id": getattr(group, "id", None),
 
-            "group_code": group.group_code,
+            "group_code": getattr(
+                group,
+                "group_code",
+                None,
+            ),
 
-            "group_name_en": group.group_name_en,
+            "group_name_en": getattr(
+                group,
+                "group_name_en",
+                None,
+            ),
 
-            "group_name_bn": group.group_name_bn,
+            "group_name_bn": getattr(
+                group,
+                "group_name_bn",
+                None,
+            ),
 
-            "display_order":
-
-                group.display_order,
+            "display_order": getattr(
+                group,
+                "display_order",
+                None,
+            ),
 
             "fields": [
 
                 self.build_field(field)
 
-                for field in group_data["fields"]
+                for field in group_data.get(
+                    "fields",
+                    [],
+                )
 
             ],
 
@@ -137,51 +208,73 @@ class RuntimeJSONBuilder:
     # Field
     # --------------------------------------------------
 
-    def build_field(self, field_data: dict) -> dict:
+    def build_field(
+        self,
+        field_data,
+    ):
 
         field = field_data["field"]
 
-        options = field_data["options"]
-
         return {
 
-            "id": field.id,
+            "id": getattr(field, "id", None),
 
-            "field_code": field.field_code,
+            "field_code": getattr(
+                field,
+                "field_code",
+                None,
+            ),
 
-            "field_name_en":
+            "field_name_en": getattr(
+                field,
+                "field_name_en",
+                None,
+            ),
 
-                field.field_name_en,
+            "field_name_bn": getattr(
+                field,
+                "field_name_bn",
+                None,
+            ),
 
-            "field_name_bn":
+            "field_type": getattr(
+                field,
+                "field_type",
+                None,
+            ),
 
-                field.field_name_bn,
+            "required": getattr(
+                field,
+                "is_required",
+                False,
+            ),
 
-            "field_type":
+            "readonly": getattr(
+                field,
+                "is_readonly",
+                False,
+            ),
 
-                field.field_type,
+            "display_order": getattr(
+                field,
+                "display_order",
+                0,
+            ),
 
-            "required":
-
-                field.is_required,
-
-            "readonly":
-
-                field.is_readonly,
-
-            "display_order":
-
-                field.display_order,
-
-            "default_value":
-
-                field.default_value,
+            "default_value": getattr(
+                field,
+                "default_value",
+                None,
+            ),
 
             "options": [
 
                 self.build_option(option)
 
-                for option in options
+                for option in field_data.get(
+                    "options",
+                    [],
+                )
 
             ],
 
@@ -191,44 +284,48 @@ class RuntimeJSONBuilder:
     # Option
     # --------------------------------------------------
 
-    def build_option(self, option) -> dict:
+    def build_option(
+        self,
+        option,
+    ):
 
         return {
 
-            "id": option.id,
+            "id": getattr(option, "id", None),
 
-            "option_code":
+            "option_code": getattr(
+                option,
+                "option_code",
+                None,
+            ),
 
-                option.option_code,
+            "option_label": getattr(
+                option,
+                "option_label",
+                None,
+            ),
 
-            "option_label":
+            "option_value": getattr(
+                option,
+                "option_value",
+                None,
+            ),
 
-                option.option_label,
-
-            "option_value":
-
-                option.option_value,
-
-            "display_order":
-
-                option.display_order,
+            "display_order": getattr(
+                option,
+                "display_order",
+                0,
+            ),
 
         }
 
     # --------------------------------------------------
-    # Generic Export
-    # --------------------------------------------------
 
     def export(
-
         self,
-
-        runtime_data: dict,
-
-    ) -> dict:
+        runtime_data,
+    ):
 
         return self.build(
-
             runtime_data
-
         )
