@@ -1,16 +1,17 @@
 """
 MKPrintingMasterPro ERP
-Build-015B
+Build-016A
 
 Formula Engine
 
 Purpose:
-Executes Dynamic Formula Rules
-stored inside Database.
+Enterprise Dynamic Formula Runtime
 
 Status:
 Production Ready
 """
+
+from typing import Dict, List
 
 from sqlalchemy.orm import Session
 
@@ -28,8 +29,6 @@ class FormulaEngine:
         self.repository = FormulaRuleRepository(db)
 
     # --------------------------------------------------
-    # Get Formula Rules
-    # --------------------------------------------------
 
     def get_rules(
         self,
@@ -41,116 +40,171 @@ class FormulaEngine:
         )
 
     # --------------------------------------------------
-    # Execute Formula
-    # --------------------------------------------------
 
     def execute_formula(
         self,
-        expression,
-        values: dict,
+        expression: str,
+        values: Dict,
     ):
+
+        safe_globals = {
+
+            "__builtins__": {},
+
+            "min": min,
+
+            "max": max,
+
+            "round": round,
+
+            "abs": abs,
+
+            "int": int,
+
+            "float": float,
+
+            "sum": sum,
+
+            "len": len,
+
+        }
 
         try:
 
-            safe_globals = {
+            return eval(
 
-                "__builtins__": {},
+                str(expression),
 
-                "min": min,
+                safe_globals,
 
-                "max": max,
+                values,
 
-                "round": round,
+            )
 
-                "abs": abs,
+        except Exception as ex:
 
-                "int": int,
+            return {
 
-                "float": float,
-
-                "sum": sum,
+                "error": str(ex)
 
             }
 
-            return eval(
-                str(expression),
-                safe_globals,
-                values,
-            )
-
-        except Exception:
-
-            return None
-
-    # --------------------------------------------------
-    # Calculate One Rule
     # --------------------------------------------------
 
     def calculate_single(
+
         self,
-        formula_rule,
-        values: dict,
+
+        rule,
+
+        values: Dict,
+
     ):
 
         return self.execute_formula(
-            formula_rule.formula_expression,
+
+            str(rule.formula_expression),
+
             values,
+
         )
 
     # --------------------------------------------------
-    # Calculate All Rules
-    # --------------------------------------------------
 
     def calculate(
+
         self,
+
         template_id: int,
-        values: dict,
+
+        values: Dict,
+
     ):
 
         rules = self.get_rules(
+
             template_id
+
         )
 
         result = {}
 
         for rule in rules:
 
-            output = self.execute_formula(
-                rule.formula_expression,
+            output = self.calculate_single(
+
+                rule,
+
                 values,
+
             )
 
             result[
+
                 str(rule.formula_code)
+
             ] = output
 
         return result
 
     # --------------------------------------------------
-    # Sequential Calculation
-    # --------------------------------------------------
 
     def calculate_all(
+
         self,
+
         template_id: int,
-        values: dict,
+
+        values: Dict,
+
     ):
 
         calculated = values.copy()
 
+        formula_log: List[Dict] = []
+
         rules = self.get_rules(
+
             template_id
+
         )
 
         for rule in rules:
 
-            output = self.execute_formula(
-                rule.formula_expression,
+            output = self.calculate_single(
+
+                rule,
+
                 calculated,
+
             )
 
             calculated[
+
                 str(rule.formula_code)
+
             ] = output
 
-        return calculated
+            formula_log.append({
+
+                "formula_code":
+
+                    str(rule.formula_code),
+
+                "expression":
+
+                    str(rule.formula_expression),
+
+                "result":
+
+                    output,
+
+            })
+
+        return {
+
+            "values": calculated,
+
+            "log": formula_log,
+
+        }

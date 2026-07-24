@@ -1,16 +1,17 @@
 """
 MKPrintingMasterPro ERP
-Build-015B
+Build-016A
 
 Dependency Engine
 
 Purpose:
-Handles Dynamic Specification
-Dependency Rules.
+Enterprise Dynamic Dependency Runtime
 
 Status:
 Production Ready
 """
+
+from typing import Dict, List
 
 from app.repositories.specification_dependency_rule_repository import (
     SpecificationDependencyRuleRepository,
@@ -43,12 +44,14 @@ class DependencyEngine:
     def evaluate(
         self,
         template_id: int,
-        values: dict,
+        values: Dict,
     ):
 
-        rules = self.get_rules(template_id)
+        rules = self.get_rules(
+            template_id
+        )
 
-        result = []
+        actions: List[Dict] = []
 
         for rule in rules:
 
@@ -56,72 +59,106 @@ class DependencyEngine:
                 rule.source_field_id
             )
 
-            if str(source_value) == str(
+            if source_value is None:
+                continue
+
+            if str(source_value) != str(
                 rule.trigger_value
             ):
+                continue
 
-                result.append(
+            actions.append({
 
-                    {
+                "target_field_id":
+                    rule.target_field_id,
 
-                        "target_field_id": rule.target_field_id,
+                "action":
+                    str(rule.action).upper(),
 
-                        "action": rule.action,
+                "source_field_id":
+                    rule.source_field_id,
 
-                        "source_field_id": rule.source_field_id,
+                "trigger_value":
+                    rule.trigger_value,
 
-                        "trigger_value": rule.trigger_value,
+            })
 
-                    }
+        return actions
 
-                )
+    # --------------------------------------------------
 
-        return result
+    def process(
+        self,
+        template_id: int,
+        values: Dict,
+        field_state: Dict,
+    ):
+
+        actions = self.evaluate(
+            template_id,
+            values,
+        )
+
+        state = self.apply_actions(
+            field_state,
+            actions,
+        )
+
+        return {
+
+            "actions": actions,
+
+            "field_state": state,
+
+        }
 
     # --------------------------------------------------
 
     def apply_actions(
         self,
-        field_state: dict,
-        actions: list,
+        field_state: Dict,
+        actions: List[Dict],
     ):
 
         for action in actions:
 
-            target = action["target_field_id"]
+            target = action[
+                "target_field_id"
+            ]
 
             if target not in field_state:
-
                 continue
 
-            rule_action = action["action"].upper()
+            current = field_state[target]
 
-            if rule_action == "SHOW":
+            command = action[
+                "action"
+            ]
 
-                field_state[target]["visible"] = True
+            match command:
 
-            elif rule_action == "HIDE":
+                case "SHOW":
+                    current["visible"] = True
 
-                field_state[target]["visible"] = False
+                case "HIDE":
+                    current["visible"] = False
 
-            elif rule_action == "ENABLE":
+                case "ENABLE":
+                    current["enabled"] = True
 
-                field_state[target]["enabled"] = True
+                case "DISABLE":
+                    current["enabled"] = False
 
-            elif rule_action == "DISABLE":
+                case "REQUIRED":
+                    current["required"] = True
 
-                field_state[target]["enabled"] = False
+                case "OPTIONAL":
+                    current["required"] = False
 
-            elif rule_action == "REQUIRED":
+                case "READONLY":
+                    current["editable"] = False
 
-                field_state[target]["required"] = True
-
-            elif rule_action == "OPTIONAL":
-
-                field_state[target]["required"] = False
-
-            elif rule_action == "READONLY":
-
-                field_state[target]["editable"] = False
+                case "EDITABLE":
+                    current["editable"] = True
 
         return field_state

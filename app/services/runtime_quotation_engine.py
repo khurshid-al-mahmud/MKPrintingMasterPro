@@ -1,15 +1,18 @@
 """
 MKPrintingMasterPro ERP
-Build-015B
+Build-016B
+Commit-01
 
-Runtime Quotation Engine V2
+Runtime Quotation Engine
 
 Purpose:
-Runs Complete Dynamic Runtime Pipeline.
+Enterprise Runtime Coordinator
 
 Status:
-Production Ready
+Compile Ready
 """
+
+from typing import Dict
 
 from sqlalchemy.orm import Session
 
@@ -25,105 +28,68 @@ from app.services.dependency_engine import (
 from app.services.formula_engine import (
     FormulaEngine,
 )
+from app.services.cost_engine import (
+    CostEngine,
+)
+from app.services.pricing_engine import (
+    PricingEngine,
+)
+from app.services.runtime_json_builder import (
+    RuntimeJSONBuilder,
+)
 
 
 class RuntimeQuotationEngine:
 
-    def __init__(self, db: Session):
+    def __init__(
+        self,
+        db: Session,
+    ):
 
         self.db = db
 
-        self.spec_service = DynamicSpecificationService(db)
+        self.specification_service = DynamicSpecificationService(db)
+
         self.validation_engine = ValidationEngine()
+
         self.dependency_engine = DependencyEngine(db)
+
         self.formula_engine = FormulaEngine(db)
+
+        # Build-016 বর্তমানে এই দুইটি Engine db গ্রহণ করে না
+        self.cost_engine = CostEngine()
+
+        self.pricing_engine = PricingEngine()
+
+        self.json_builder = RuntimeJSONBuilder()
 
     # --------------------------------------------------
 
     def run(
         self,
         template_id: int,
-        values: dict,
+        values: Dict,
     ):
 
-        runtime = self.spec_service.load_template(
-            template_id
-        )
+        """
+        Build-016B Commit-01
 
-        if runtime is None:
+        Skeleton Only
 
-            return {
-                "success": False,
-                "message": "Template Not Found"
-            }
-
-        validation_errors = []
-
-        # ----------------------------
-        # Validation
-        # ----------------------------
-
-        for group_data in runtime["groups"]:
-
-            for field_data in group_data["fields"]:
-
-                field = field_data["field"]
-
-                value = values.get(field.id)
-
-                valid, message = (
-                    self.validation_engine.validate(
-                        value,
-                        field,
-                    )
-                )
-
-                if not valid:
-
-                    validation_errors.append(
-
-                        {
-                            "field_id": field.id,
-                            "field_name": field.field_name_en,
-                            "message": message,
-                        }
-
-                    )
-
-        # ----------------------------
-        # Dependency
-        # ----------------------------
-
-        dependency_result = (
-            self.dependency_engine.evaluate(
-                template_id,
-                values,
-            )
-        )
-
-        # ----------------------------
-        # Formula
-        # ----------------------------
-
-        formula_result = (
-            self.formula_engine.calculate_all(
-                template_id,
-                values,
-            )
-        )
+        Runtime Pipeline
+        will be added in Commit-02.
+        """
 
         return {
 
-            "success": len(validation_errors) == 0,
+            "success": True,
 
-            "template": runtime["template"],
+            "build": "016B",
 
-            "groups": runtime["groups"],
+            "commit": "01",
 
-            "validation_errors": validation_errors,
+            "template_id": template_id,
 
-            "dependency": dependency_result,
-
-            "formula": formula_result,
+            "values": values,
 
         }
