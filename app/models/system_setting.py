@@ -8,7 +8,9 @@ from sqlalchemy import Boolean, DateTime, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 
-from app.database.base import Base
+# IMPORTANT:
+# Use the SAME Base as every other model
+from app.models.base import Base
 
 
 class SystemSetting(Base):
