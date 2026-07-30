@@ -15,7 +15,7 @@ from app.schemas.product import (
 
 class ProductService:
     """
-    Service layer for Product management.
+    Service layer for Product Management.
     """
 
     def __init__(
@@ -24,12 +24,13 @@ class ProductService:
     ) -> None:
         self.repository = repository
 
+
     def create(
         self,
         product: ProductCreate,
     ) -> Product:
         """
-        Create product.
+        Create a new product.
         """
 
         if self.repository.exists_by_product_code(
@@ -39,6 +40,7 @@ class ProductService:
                 "Product code already exists.",
             )
 
+
         if self.repository.exists_by_product_name(
             product.product_name,
         ):
@@ -46,17 +48,30 @@ class ProductService:
                 "Product name already exists.",
             )
 
+
         new_product = Product(
             product_code=product.product_code,
             product_name=product.product_name,
-            product_category=product.product_category,
+            category_id=product.category_id,
             printing_type=product.printing_type,
             unit=product.unit,
         )
 
+
         return self.repository.create(
             new_product,
         )
+
+
+    def get_all(
+        self,
+    ) -> list[Product]:
+        """
+        Get all active products.
+        """
+
+        return self.repository.get_all()
+
 
     def get_by_id(
         self,
@@ -70,14 +85,6 @@ class ProductService:
             product_id,
         )
 
-    def get_all(
-        self,
-    ) -> list[Product]:
-        """
-        Get all products.
-        """
-
-        return self.repository.get_all()
 
     def update(
         self,
@@ -95,6 +102,7 @@ class ProductService:
             ),
         )
 
+
     def delete(
         self,
         product_id: int,
@@ -106,6 +114,7 @@ class ProductService:
         return self.repository.soft_delete(
             product_id,
         )
+
 
     def search(
         self,

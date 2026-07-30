@@ -1,25 +1,17 @@
 """
-Product Master Model.
+Product Category Model.
 
-Stores every printable product
-used in the ERP system.
-
-Products are used in:
-
-- Quotation
-- Job Order
-- Formula Engine
-- Inventory
-- Production
+Stores all product categories
+used throughout the ERP.
 """
 
 from datetime import datetime
 
 from sqlalchemy import Boolean
 from sqlalchemy import DateTime
-from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
+from sqlalchemy import Text
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
@@ -27,10 +19,12 @@ from sqlalchemy.orm import relationship
 from app.models.base import Base
 
 
-class Product(Base):
-    """Product Master."""
+class ProductCategory(Base):
+    """
+    Product Category Master.
+    """
 
-    __tablename__ = "products"
+    __tablename__ = "product_categories"
 
     id: Mapped[int] = mapped_column(
         Integer,
@@ -39,34 +33,28 @@ class Product(Base):
         index=True,
     )
 
-    product_code: Mapped[str] = mapped_column(
+    category_code: Mapped[str] = mapped_column(
         String(30),
-        nullable=False,
         unique=True,
-        index=True,
-    )
-
-    product_name: Mapped[str] = mapped_column(
-        String(200),
         nullable=False,
         index=True,
     )
 
-    category_id: Mapped[int] = mapped_column(
-        ForeignKey(
-            "product_categories.id"
-        ),
+    category_name: Mapped[str] = mapped_column(
+        String(150),
+        unique=True,
         nullable=False,
         index=True,
     )
 
-    printing_type: Mapped[str] = mapped_column(
-        String(50),
-        nullable=False,
+    description: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
     )
 
-    unit: Mapped[str] = mapped_column(
-        String(30),
+    sort_order: Mapped[int] = mapped_column(
+        Integer,
+        default=1,
         nullable=False,
     )
 
@@ -89,7 +77,8 @@ class Product(Base):
         nullable=False,
     )
 
-    category = relationship(
-        "ProductCategory",
-        back_populates="products",
+    # Relationship with Product Master
+    products = relationship(
+        "Product",
+        back_populates="category",
     )

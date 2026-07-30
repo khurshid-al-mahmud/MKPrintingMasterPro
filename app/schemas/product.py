@@ -18,7 +18,7 @@ class ProductBase(BaseModel):
 
     product_code: str
     product_name: str
-    product_category: str
+    category_id: int
     printing_type: str
     unit: str
 
@@ -38,7 +38,7 @@ class ProductUpdate(BaseModel):
 
     product_code: str | None = None
     product_name: str | None = None
-    product_category: str | None = None
+    category_id: int | None = None
     printing_type: str | None = None
     unit: str | None = None
 

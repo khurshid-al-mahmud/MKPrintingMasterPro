@@ -20,6 +20,7 @@ from app.repositories.paper_type_repository import PaperTypeRepository
 from app.repositories.party_repository import PartyRepository
 from app.repositories.print_partner_repository import PrintPartnerRepository
 from app.repositories.product_repository import ProductRepository
+from app.repositories.product_category_repository import ProductCategoryRepository
 from app.repositories.supplier_repository import SupplierRepository
 
 from app.services.customer_service import CustomerService
@@ -32,6 +33,7 @@ from app.services.paper_type_service import PaperTypeService
 from app.services.party_service import PartyService
 from app.services.print_partner_service import PrintPartnerService
 from app.services.product_service import ProductService
+from app.services.product_category_service import ProductCategoryService
 from app.services.supplier_service import SupplierService
 
 
@@ -102,6 +104,16 @@ def get_product_service(
 
     return ProductService(
         ProductRepository(db),
+    )
+
+
+def get_product_category_service(
+    db: Session = Depends(get_db),
+) -> ProductCategoryService:
+    """Provide ProductCategoryService dependency."""
+
+    return ProductCategoryService(
+        ProductCategoryRepository(db),
     )
 
 

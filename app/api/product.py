@@ -5,7 +5,9 @@ REST API endpoints
 for Product Management.
 """
 
-from fastapi import APIRouter, Depends
+import traceback
+
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.api.dependencies.service import get_product_service
 from app.schemas.product import (
@@ -14,6 +16,7 @@ from app.schemas.product import (
     ProductUpdate,
 )
 from app.services.product_service import ProductService
+
 
 router = APIRouter(
     prefix="/product",
@@ -26,15 +29,18 @@ router = APIRouter(
     response_model=list[ProductResponse],
 )
 def get_all_products(
-    service: ProductService = Depends(
-        get_product_service,
-    ),
+    service: ProductService = Depends(get_product_service),
 ):
-    """
-    Get all products.
-    """
+    try:
+        return service.get_all()
 
-    return service.get_all()
+    except Exception as e:
+        print(traceback.format_exc())
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )
 
 
 @router.get(
@@ -43,17 +49,29 @@ def get_all_products(
 )
 def get_product(
     product_id: int,
-    service: ProductService = Depends(
-        get_product_service,
-    ),
+    service: ProductService = Depends(get_product_service),
 ):
-    """
-    Get product by ID.
-    """
+    try:
+        product = service.get_by_id(product_id)
 
-    return service.get_by_id(
-        product_id,
-    )
+        if product is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Product not found.",
+            )
+
+        return product
+
+    except HTTPException:
+        raise
+
+    except Exception as e:
+        print(traceback.format_exc())
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )
 
 
 @router.post(
@@ -62,17 +80,24 @@ def get_product(
 )
 def create_product(
     product: ProductCreate,
-    service: ProductService = Depends(
-        get_product_service,
-    ),
+    service: ProductService = Depends(get_product_service),
 ):
-    """
-    Create product.
-    """
+    try:
+        return service.create(product)
 
-    return service.create(
-        product,
-    )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e),
+        )
+
+    except Exception as e:
+        print(traceback.format_exc())
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )
 
 
 @router.put(
@@ -82,18 +107,32 @@ def create_product(
 def update_product(
     product_id: int,
     product: ProductUpdate,
-    service: ProductService = Depends(
-        get_product_service,
-    ),
+    service: ProductService = Depends(get_product_service),
 ):
-    """
-    Update product.
-    """
+    try:
+        updated = service.update(
+            product_id,
+            product,
+        )
 
-    return service.update(
-        product_id,
-        product,
-    )
+        if updated is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Product not found.",
+            )
+
+        return updated
+
+    except HTTPException:
+        raise
+
+    except Exception as e:
+        print(traceback.format_exc())
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )
 
 
 @router.delete(
@@ -101,17 +140,31 @@ def update_product(
 )
 def delete_product(
     product_id: int,
-    service: ProductService = Depends(
-        get_product_service,
-    ),
+    service: ProductService = Depends(get_product_service),
 ):
-    """
-    Soft delete product.
-    """
+    try:
+        deleted = service.delete(product_id)
 
-    return service.delete(
-        product_id,
-    )
+        if not deleted:
+            raise HTTPException(
+                status_code=404,
+                detail="Product not found.",
+            )
+
+        return {
+            "message": "Product deleted successfully."
+        }
+
+    except HTTPException:
+        raise
+
+    except Exception as e:
+        print(traceback.format_exc())
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )
 
 
 @router.get(
@@ -120,14 +173,15 @@ def delete_product(
 )
 def search_product(
     keyword: str,
-    service: ProductService = Depends(
-        get_product_service,
-    ),
+    service: ProductService = Depends(get_product_service),
 ):
-    """
-    Search products.
-    """
+    try:
+        return service.search(keyword)
 
-    return service.search(
-        keyword,
-    )
+    except Exception as e:
+        print(traceback.format_exc())
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )

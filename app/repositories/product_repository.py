@@ -21,22 +21,20 @@ class ProductRepository:
     ):
         self.db = db
 
+
     def create(
         self,
         product: Product,
     ) -> Product:
 
-        self.db.add(
-            product,
-        )
+        self.db.add(product)
 
         self.db.commit()
 
-        self.db.refresh(
-            product,
-        )
+        self.db.refresh(product)
 
         return product
+
 
     def get_by_id(
         self,
@@ -44,9 +42,7 @@ class ProductRepository:
     ) -> Product | None:
 
         return (
-            self.db.query(
-                Product,
-            )
+            self.db.query(Product)
             .filter(
                 Product.id == product_id,
                 Product.is_active == True,
@@ -54,19 +50,19 @@ class ProductRepository:
             .first()
         )
 
+
     def get_all(
         self,
     ) -> list[Product]:
 
         return (
-            self.db.query(
-                Product,
-            )
+            self.db.query(Product)
             .filter(
                 Product.is_active == True,
             )
             .all()
         )
+
 
     def update(
         self,
@@ -74,9 +70,7 @@ class ProductRepository:
         product_data: dict,
     ) -> Product | None:
 
-        product = self.get_by_id(
-            product_id,
-        )
+        product = self.get_by_id(product_id)
 
         if product is None:
             return None
@@ -90,20 +84,17 @@ class ProductRepository:
 
         self.db.commit()
 
-        self.db.refresh(
-            product,
-        )
+        self.db.refresh(product)
 
         return product
+
 
     def soft_delete(
         self,
         product_id: int,
     ) -> bool:
 
-        product = self.get_by_id(
-            product_id,
-        )
+        product = self.get_by_id(product_id)
 
         if product is None:
             return False
@@ -114,33 +105,30 @@ class ProductRepository:
 
         return True
 
+
     def search(
         self,
         keyword: str,
     ) -> list[Product]:
 
         return (
-            self.db.query(
-                Product,
-            )
+            self.db.query(Product)
             .filter(
                 Product.is_active == True,
             )
             .filter(
                 or_(
                     Product.product_name.ilike(
-                        f"%{keyword}%",
+                        f"%{keyword}%"
                     ),
                     Product.product_code.ilike(
-                        f"%{keyword}%",
-                    ),
-                    Product.product_category.ilike(
-                        f"%{keyword}%",
+                        f"%{keyword}%"
                     ),
                 )
             )
             .all()
         )
+
 
     def exists_by_product_code(
         self,
@@ -148,9 +136,7 @@ class ProductRepository:
     ) -> bool:
 
         return (
-            self.db.query(
-                Product,
-            )
+            self.db.query(Product)
             .filter(
                 Product.product_code == product_code,
             )
@@ -158,15 +144,14 @@ class ProductRepository:
             is not None
         )
 
+
     def exists_by_product_name(
         self,
         product_name: str,
     ) -> bool:
 
         return (
-            self.db.query(
-                Product,
-            )
+            self.db.query(Product)
             .filter(
                 Product.product_name == product_name,
             )
