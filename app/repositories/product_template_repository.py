@@ -1,93 +1,160 @@
 """
-MKPrintingMasterPro ERP
-Build-015
+Product Template Repository.
 
-Product Template Repository
-
-Purpose:
-Handles Product Template database operations.
-
-Status:
-Production Ready
+Database access layer
+for Product Template Management.
 """
 
-from app.repositories.base_repository import BaseRepository
+from sqlalchemy import or_
+
 from app.models.product_template import ProductTemplate
 
 
-class ProductTemplateRepository(BaseRepository):
+class ProductTemplateRepository:
+    """
+    Repository for Product Template.
+    """
 
-    def __init__(self, db):
-        super().__init__(db, ProductTemplate)
-
-    # --------------------------------------------------
-    # Get Active Template
-    # --------------------------------------------------
-
-    def get_active_template(
+    def __init__(
         self,
-        product_category_id,
-        construction_type_id=None,
+        db,
     ):
+        self.db = db
 
-        query = (
-            self.db.query(ProductTemplate)
-            .filter(
-                ProductTemplate.product_category_id == product_category_id,
-                ProductTemplate.is_active == True,
-            )
-        )
 
-        if construction_type_id is not None:
+    def create(
+        self,
+        template: ProductTemplate,
+    ) -> ProductTemplate:
 
-            query = query.filter(
-                ProductTemplate.construction_type_id == construction_type_id
-            )
+        self.db.add(template)
 
-        return query.first()
+        self.db.commit()
 
-    # --------------------------------------------------
-    # Get Default Template
-    # --------------------------------------------------
+        self.db.refresh(template)
 
-    def get_default_template(self):
+        return template
+
+
+    def get_by_id(
+        self,
+        template_id: int,
+    ) -> ProductTemplate | None:
 
         return (
             self.db.query(ProductTemplate)
             .filter(
-                ProductTemplate.is_default == True,
+                ProductTemplate.id == template_id,
                 ProductTemplate.is_active == True,
             )
             .first()
         )
 
-    # --------------------------------------------------
-    # Get By Template Code
-    # --------------------------------------------------
 
-    def get_by_code(self, template_code):
-
-        return (
-            self.db.query(ProductTemplate)
-            .filter(
-                ProductTemplate.template_code == template_code
-            )
-            .first()
-        )
-
-    # --------------------------------------------------
-    # Get All Active Templates
-    # --------------------------------------------------
-
-    def get_active_templates(self):
+    def get_all(
+        self,
+    ) -> list[ProductTemplate]:
 
         return (
             self.db.query(ProductTemplate)
             .filter(
-                ProductTemplate.is_active == True
-            )
-            .order_by(
-                ProductTemplate.template_name_en
+                ProductTemplate.is_active == True,
             )
             .all()
+        )
+
+
+    def update(
+        self,
+        template_id: int,
+        template_data: dict,
+    ) -> ProductTemplate | None:
+
+        template = self.get_by_id(template_id)
+
+        if template is None:
+            return None
+
+        for key, value in template_data.items():
+            setattr(
+                template,
+                key,
+                value,
+            )
+
+        self.db.commit()
+
+        self.db.refresh(template)
+
+        return template
+
+
+    def soft_delete(
+        self,
+        template_id: int,
+    ) -> bool:
+
+        template = self.get_by_id(template_id)
+
+        if template is None:
+            return False
+
+        template.is_active = False
+
+        self.db.commit()
+
+        return True
+
+
+    def search(
+        self,
+        keyword: str,
+    ) -> list[ProductTemplate]:
+
+        return (
+            self.db.query(ProductTemplate)
+            .filter(
+                ProductTemplate.is_active == True,
+            )
+            .filter(
+                or_(
+                    ProductTemplate.template_name.ilike(
+                        f"%{keyword}%"
+                    ),
+                    ProductTemplate.template_code.ilike(
+                        f"%{keyword}%"
+                    ),
+                )
+            )
+            .all()
+        )
+
+
+    def exists_by_template_code(
+        self,
+        template_code: str,
+    ) -> bool:
+
+        return (
+            self.db.query(ProductTemplate)
+            .filter(
+                ProductTemplate.template_code == template_code,
+            )
+            .first()
+            is not None
+        )
+
+
+    def exists_by_template_name(
+        self,
+        template_name: str,
+    ) -> bool:
+
+        return (
+            self.db.query(ProductTemplate)
+            .filter(
+                ProductTemplate.template_name == template_name,
+            )
+            .first()
+            is not None
         )

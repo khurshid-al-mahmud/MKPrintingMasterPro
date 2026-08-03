@@ -53,9 +53,7 @@ class Product(Base):
     )
 
     category_id: Mapped[int] = mapped_column(
-        ForeignKey(
-            "product_categories.id"
-        ),
+        ForeignKey("product_categories.id"),
         nullable=False,
         index=True,
     )
@@ -92,4 +90,9 @@ class Product(Base):
     category = relationship(
         "ProductCategory",
         back_populates="products",
+    )
+
+    templates = relationship(
+        "ProductTemplate",
+        back_populates="product",
     )

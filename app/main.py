@@ -17,6 +17,7 @@ from app.api import party
 from app.api import print_partner
 from app.api import product
 from app.api import product_category
+from app.api import product_template
 from app.api import supplier
 from app.api import system_setting
 
@@ -63,6 +64,7 @@ app.include_router(employee.router)
 app.include_router(print_partner.router)
 app.include_router(product.router)
 app.include_router(product_category.router)
+app.include_router(product_template.router)
 app.include_router(machine.router)
 app.include_router(company_profile.router)
 app.include_router(system_setting.router)

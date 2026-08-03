@@ -1,156 +1,87 @@
 """
-MKPrintingMasterPro ERP
-Build-013
-Product Template Model
+Product Template Model.
 
-Purpose:
-Stores Dynamic Product Specification Templates.
-
-Example:
-Book + Paperback
-Book + Hard Cover
-Magazine + Center Pin
-Medicine Box
-Visiting Card
-
-Status:
-Production Ready
+Each Product can have one or more Templates.
 """
-
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Boolean,
-    Text,
-    DateTime,
-    ForeignKey
-)
-
-from sqlalchemy.orm import relationship
-
-from app.database.base import Base
 
 from datetime import datetime
 
+from sqlalchemy import Boolean
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
+
+from app.models.base import Base
+
 
 class ProductTemplate(Base):
+    """
+    Product Template Master.
+    """
+
     __tablename__ = "product_templates"
 
-    id = Column(Integer, primary_key=True, index=True)
-
-    # ------------------------------
-    # Identity
-    # ------------------------------
-
-    template_code = Column(String(50), unique=True, nullable=False)
-
-    template_name_en = Column(String(200), nullable=False)
-
-    template_name_bn = Column(String(200), nullable=True)
-
-    description = Column(Text, nullable=True)
-
-    # ------------------------------
-    # Relations
-    # ------------------------------
-
-    product_category_id = Column(
+    id: Mapped[int] = mapped_column(
         Integer,
+        primary_key=True,
+        autoincrement=True,
+        index=True,
+    )
+
+    template_code: Mapped[str] = mapped_column(
+        String(30),
+        unique=True,
+        nullable=False,
+        index=True,
+    )
+
+    template_name: Mapped[str] = mapped_column(
+        String(150),
+        nullable=False,
+        index=True,
+    )
+
+    product_id: Mapped[int] = mapped_column(
         ForeignKey("products.id"),
-        nullable=False
+        nullable=False,
+        index=True,
     )
 
-    construction_type_id = Column(
-        Integer,
-        ForeignKey("binding_types.id"),
-        nullable=True
+    description: Mapped[str | None] = mapped_column(
+        String(300),
+        nullable=True,
     )
 
-    # ------------------------------
-    # Language Support
-    # ------------------------------
-
-    enable_bangla = Column(Boolean, default=True)
-
-    enable_english = Column(Boolean, default=True)
-
-    # ------------------------------
-    # Status
-    # ------------------------------
-
-    is_active = Column(Boolean, default=True)
-
-    is_default = Column(Boolean, default=False)
-
-    version = Column(String(20), default="1.0")
-
-    # ------------------------------
-    # Audit
-    # ------------------------------
-
-    created_by = Column(String(100), nullable=True)
-
-    updated_by = Column(String(100), nullable=True)
-
-    created_at = Column(
-        DateTime,
-        default=datetime.utcnow
+    is_default: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
     )
 
-    updated_at = Column(
-        DateTime,
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        default=True,
+        nullable=False,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
         default=datetime.utcnow,
-        onupdate=datetime.utcnow
+        nullable=False,
     )
 
-    # ------------------------------
-    # Relationships
-    # ------------------------------
-
-    product = relationship("Product")
-
-    construction = relationship("BindingType")
-
-    specification_groups = relationship(
-        "SpecificationGroup",
-        back_populates="template",
-        cascade="all, delete-orphan"
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
+        nullable=False,
     )
 
-    template_fields = relationship(
-        "TemplateFieldMapping",
-        back_populates="template",
-        cascade="all, delete-orphan"
+    product = relationship(
+        "Product",
+        back_populates="templates",
     )
-
-    dependency_rules = relationship(
-        "SpecificationDependencyRule",
-        back_populates="template",
-        cascade="all, delete-orphan"
-    )
-
-    formula_rules = relationship(
-        "FormulaRule",
-        back_populates="template",
-        cascade="all, delete-orphan"
-    )
-
-    audit_logs = relationship(
-        "SpecificationAudit",
-        back_populates="template",
-        cascade="all, delete-orphan"
-    )
-
-    template_versions = relationship(
-        "TemplateVersion",
-        back_populates="template",
-        cascade="all, delete-orphan"
-    )
-
-    def __repr__(self):
-        return (
-            f"<ProductTemplate("
-            f"{self.template_code}, "
-            f"{self.template_name_en})>"
-        )
