@@ -29,9 +29,6 @@ from sqlalchemy.orm import relationship
 
 from app.models.base import Base
 
-from app.models.specification_group import SpecificationGroup
-from app.models.field_option import FieldOption
-
 
 class SpecificationField(Base):
 

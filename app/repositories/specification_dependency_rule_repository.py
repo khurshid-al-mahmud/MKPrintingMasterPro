@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session
 from app.models.specification_dependency_rule import (
     SpecificationDependencyRule,
 )
+
 from app.repositories.base_repository import BaseRepository
 
 
@@ -24,29 +25,26 @@ class SpecificationDependencyRuleRepository(BaseRepository):
     Specification Dependency Rule Repository
     """
 
-    def __init__(self, db: Session):
-        super().__init__(db, SpecificationDependencyRule)
-
-    # ------------------------------------------
-    # Find by ID
-    # ------------------------------------------
-
-    def get_by_id(self, rule_id: int):
-        return (
-            self.db.query(SpecificationDependencyRule)
-            .filter(
-                SpecificationDependencyRule.id == rule_id
-            )
-            .first()
+    def __init__(
+        self,
+        db: Session,
+    ):
+        super().__init__(
+            db,
+            SpecificationDependencyRule
         )
 
-    # ------------------------------------------
-    # Get Active Rules
-    # ------------------------------------------
+
+    # =====================================
+    # GET ALL ACTIVE RULES
+    # =====================================
 
     def get_active_rules(self):
+
         return (
-            self.db.query(SpecificationDependencyRule)
+            self.db.query(
+                SpecificationDependencyRule
+            )
             .filter(
                 SpecificationDependencyRule.is_active.is_(True)
             )
@@ -56,16 +54,43 @@ class SpecificationDependencyRuleRepository(BaseRepository):
             .all()
         )
 
-    # ------------------------------------------
-    # Get Rules By Template
-    # ------------------------------------------
 
-    def get_by_template(self, template_id: int):
+    # =====================================
+    # GET BY ID
+    # =====================================
+
+    def get_by_id(
+        self,
+        rule_id: int,
+    ):
+
         return (
-            self.db.query(SpecificationDependencyRule)
+            self.db.query(
+                SpecificationDependencyRule
+            )
             .filter(
-                SpecificationDependencyRule.template_id
-                == template_id
+                SpecificationDependencyRule.id == rule_id
+            )
+            .first()
+        )
+
+
+    # =====================================
+    # GET BY TEMPLATE
+    # =====================================
+
+    def get_by_template(
+        self,
+        template_id: int,
+    ):
+
+        return (
+            self.db.query(
+                SpecificationDependencyRule
+            )
+            .filter(
+                SpecificationDependencyRule.template_id == template_id,
+                SpecificationDependencyRule.is_active.is_(True)
             )
             .order_by(
                 SpecificationDependencyRule.priority
@@ -73,16 +98,23 @@ class SpecificationDependencyRuleRepository(BaseRepository):
             .all()
         )
 
-    # ------------------------------------------
-    # Get Rules By Source Field
-    # ------------------------------------------
 
-    def get_by_source_field(self, field_id: int):
+    # =====================================
+    # GET BY SOURCE FIELD
+    # =====================================
+
+    def get_by_source_field(
+        self,
+        field_id: int,
+    ):
+
         return (
-            self.db.query(SpecificationDependencyRule)
+            self.db.query(
+                SpecificationDependencyRule
+            )
             .filter(
-                SpecificationDependencyRule.source_field_id
-                == field_id
+                SpecificationDependencyRule.source_field_id == field_id,
+                SpecificationDependencyRule.is_active.is_(True)
             )
             .order_by(
                 SpecificationDependencyRule.priority
@@ -90,33 +122,54 @@ class SpecificationDependencyRuleRepository(BaseRepository):
             .all()
         )
 
-    # ------------------------------------------
-    # Create
-    # ------------------------------------------
+
+    # =====================================
+    # CREATE
+    # =====================================
 
     def create_rule(
         self,
         rule: SpecificationDependencyRule,
     ):
+
         self.db.add(rule)
+
         self.db.commit()
+
         self.db.refresh(rule)
+
         return rule
 
-    # ------------------------------------------
-    # Update
-    # ------------------------------------------
 
-    def update_rule(self):
+
+    # =====================================
+    # UPDATE
+    # =====================================
+
+    def update_rule(
+        self,
+    ):
+
         self.db.commit()
 
-    # ------------------------------------------
-    # Delete
-    # ------------------------------------------
+
+    # =====================================
+    # DELETE SOFT
+    # =====================================
 
     def delete_rule(
         self,
         rule: SpecificationDependencyRule,
     ):
-        self.db.delete(rule)
+
+        setattr(
+            rule,
+            "is_active",
+            False
+        )
+
         self.db.commit()
+
+        self.db.refresh(rule)
+
+        return True

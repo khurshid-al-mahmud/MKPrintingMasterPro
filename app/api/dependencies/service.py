@@ -45,6 +45,15 @@ from app.repositories.validation_rule_repository import (
     ValidationRuleRepository,
 )
 
+from app.repositories.formula_rule_repository import (
+    FormulaRuleRepository,
+)
+
+from app.repositories.specification_dependency_rule_repository import (
+    SpecificationDependencyRuleRepository,
+)
+
+
 # ==========================
 # Services
 # ==========================
@@ -79,9 +88,19 @@ from app.services.validation_rule_service import (
     ValidationRuleService,
 )
 
-# ==========================
+from app.services.formula_rule_service import (
+    FormulaRuleService,
+)
+
+from app.services.specification_dependency_rule_service import (
+    SpecificationDependencyRuleService,
+)
+
+
+
+# ==================================================
 # Party
-# ==========================
+# ==================================================
 
 def get_party_service(
     db: Session = Depends(get_db),
@@ -93,9 +112,9 @@ def get_party_service(
 
 
 
-# ==========================
+# ==================================================
 # Supplier
-# ==========================
+# ==================================================
 
 def get_supplier_service(
     db: Session = Depends(get_db),
@@ -107,9 +126,9 @@ def get_supplier_service(
 
 
 
-# ==========================
+# ==================================================
 # Customer
-# ==========================
+# ==================================================
 
 def get_customer_service(
     db: Session = Depends(get_db),
@@ -121,9 +140,9 @@ def get_customer_service(
 
 
 
-# ==========================
+# ==================================================
 # Employee
-# ==========================
+# ==================================================
 
 def get_employee_service(
     db: Session = Depends(get_db),
@@ -135,9 +154,9 @@ def get_employee_service(
 
 
 
-# ==========================
+# ==================================================
 # Print Partner
-# ==========================
+# ==================================================
 
 def get_print_partner_service(
     db: Session = Depends(get_db),
@@ -149,9 +168,9 @@ def get_print_partner_service(
 
 
 
-# ==========================
+# ==================================================
 # Machine
-# ==========================
+# ==================================================
 
 def get_machine_service(
     db: Session = Depends(get_db),
@@ -163,9 +182,9 @@ def get_machine_service(
 
 
 
-# ==========================
+# ==================================================
 # Product
-# ==========================
+# ==================================================
 
 def get_product_service(
     db: Session = Depends(get_db),
@@ -177,9 +196,9 @@ def get_product_service(
 
 
 
-# ==========================
+# ==================================================
 # Product Template
-# ==========================
+# ==================================================
 
 def get_product_template_service(
     db: Session = Depends(get_db),
@@ -191,9 +210,9 @@ def get_product_template_service(
 
 
 
-# ==========================
+# ==================================================
 # Product Category
-# ==========================
+# ==================================================
 
 def get_product_category_service(
     db: Session = Depends(get_db),
@@ -205,9 +224,9 @@ def get_product_category_service(
 
 
 
-# ==========================
+# ==================================================
 # Paper Type
-# ==========================
+# ==================================================
 
 def get_paper_type_service(
     db: Session = Depends(get_db),
@@ -219,9 +238,9 @@ def get_paper_type_service(
 
 
 
-# ==========================
+# ==================================================
 # Paper Brand
-# ==========================
+# ==================================================
 
 def get_paper_brand_service(
     db: Session = Depends(get_db),
@@ -233,9 +252,9 @@ def get_paper_brand_service(
 
 
 
-# ==========================
+# ==================================================
 # Paper GSM
-# ==========================
+# ==================================================
 
 def get_paper_gsm_service(
     db: Session = Depends(get_db),
@@ -247,9 +266,9 @@ def get_paper_gsm_service(
 
 
 
-# ==========================
+# ==================================================
 # Paper Size
-# ==========================
+# ==================================================
 
 def get_paper_size_service(
     db: Session = Depends(get_db),
@@ -286,6 +305,9 @@ def get_specification_field_service(
     return SpecificationFieldService(
         SpecificationFieldRepository(db),
     )
+
+
+
 # ==================================================
 # Field Option
 # ==================================================
@@ -298,6 +320,8 @@ def get_field_option_service(
         FieldOptionRepository(db),
     )
 
+
+
 # ==================================================
 # Validation Rule
 # ==================================================
@@ -308,4 +332,32 @@ def get_validation_rule_service(
 
     return ValidationRuleService(
         ValidationRuleRepository(db),
+    )
+
+
+
+# ==================================================
+# Formula Rule
+# ==================================================
+
+def get_formula_rule_service(
+    db: Session = Depends(get_db),
+) -> FormulaRuleService:
+
+    return FormulaRuleService(
+        FormulaRuleRepository(db),
+    )
+
+
+
+# ==================================================
+# Specification Dependency Rule
+# ==================================================
+
+def get_specification_dependency_rule_service(
+    db: Session = Depends(get_db),
+) -> SpecificationDependencyRuleService:
+
+    return SpecificationDependencyRuleService(
+        SpecificationDependencyRuleRepository(db),
     )

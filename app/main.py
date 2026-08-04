@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from starlette.requests import Request
 
+
 from app.api import binding_type
 from app.api import company_profile
 from app.api import customer
@@ -24,16 +25,20 @@ from app.api import supplier
 from app.api import system_setting
 from app.api import specification_group
 from app.api import specification_field
+from app.api import formula_rule
 from app.api import field_option
 from app.api import validation_rule
+from app.api import specification_dependency_rule
+
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.DEBUG
 )
+
 
 app = FastAPI(
     title="MKPrintingMasterPro ERP",
-    version="0.1.0",
+    version="0.1.0"
 )
 
 
@@ -47,39 +52,77 @@ async def global_exception_handler(
     return JSONResponse(
         status_code=500,
         content={
-            "detail": str(exc),
-        },
+            "detail": str(exc)
+        }
     )
 
 
 @app.get("/")
 def root():
     return {
-        "message": "MKPrintingMasterPro ERP API is running",
+        "message": "MKPrintingMasterPro ERP API is running"
     }
 
 
-# ===========================
+
+# ==========================
 # Master Modules
-# ===========================
+# ==========================
 
 app.include_router(party.router)
+
 app.include_router(supplier.router)
+
 app.include_router(customer.router)
+
 app.include_router(employee.router)
+
 app.include_router(print_partner.router)
+
 app.include_router(product.router)
+
 app.include_router(product_category.router)
+
 app.include_router(product_template.router)
+
 app.include_router(machine.router)
+
 app.include_router(company_profile.router)
+
 app.include_router(system_setting.router)
+
 app.include_router(paper_type.router)
+
 app.include_router(paper_brand.router)
+
 app.include_router(paper_gsm.router)
+
 app.include_router(paper_size.router)
+
 app.include_router(binding_type.router)
+
 app.include_router(specification_group.router)
+
 app.include_router(specification_field.router)
+
+
+# Formula Engine Modules
+app.include_router(formula_rule.router)
+
 app.include_router(field_option.router)
+
 app.include_router(validation_rule.router)
+app.include_router(
+    specification_dependency_rule.router
+)
+
+# Formula Engine Modules
+app.include_router(formula_rule.router)
+
+app.include_router(field_option.router)
+
+app.include_router(validation_rule.router)
+
+app.include_router(
+    specification_dependency_rule.router
+)

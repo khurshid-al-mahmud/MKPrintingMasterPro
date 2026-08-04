@@ -17,8 +17,16 @@ from .party import router as party_router
 from .print_partner import router as print_partner_router
 from .product import router as product_router
 from .product_category import router as product_category_router
+from .product_template import router as product_template_router
 from .supplier import router as supplier_router
 from .system_setting import router as system_setting_router
+
+from .specification_group import router as specification_group_router
+from .specification_field import router as specification_field_router
+from .field_option import router as field_option_router
+from .validation_rule import router as validation_rule_router
+from .formula_rule import router as formula_rule_router
+
 
 __all__ = [
     "binding_type_router",
@@ -34,6 +42,13 @@ __all__ = [
     "print_partner_router",
     "product_router",
     "product_category_router",
+    "product_template_router",
     "supplier_router",
     "system_setting_router",
+
+    "specification_group_router",
+    "specification_field_router",
+    "field_option_router",
+    "validation_rule_router",
+    "formula_rule_router",
 ]

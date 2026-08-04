@@ -6,56 +6,51 @@ Formula Rule Repository
 
 Purpose:
 Repository for FormulaRule CRUD operations.
-
-Status:
-Production Ready
 """
 
 from sqlalchemy.orm import Session
 
 from app.models.formula_rule import FormulaRule
-from app.repositories.base_repository import BaseRepository
 
 
-class FormulaRuleRepository(BaseRepository):
+class FormulaRuleRepository:
     """
     Formula Rule Repository
     """
 
-    def __init__(self, db: Session):
-        super().__init__(db, FormulaRule)
+    def __init__(
+        self,
+        db: Session,
+    ):
+        self.db = db
 
-    # ------------------------------------------
-    # Find by ID
-    # ------------------------------------------
 
-    def get_by_id(self, rule_id: int):
-        return (
-            self.db.query(FormulaRule)
-            .filter(FormulaRule.id == rule_id)
-            .first()
-        )
+    # =====================================
+    # CREATE
+    # =====================================
 
-    # ------------------------------------------
-    # Find by Code
-    # ------------------------------------------
+    def create_rule(
+        self,
+        formula: FormulaRule,
+    ) -> FormulaRule:
 
-    def get_by_code(self, formula_code: str):
-        return (
-            self.db.query(FormulaRule)
-            .filter(
-                FormulaRule.formula_code == formula_code
-            )
-            .first()
-        )
+        self.db.add(formula)
+        self.db.commit()
+        self.db.refresh(formula)
 
-    # ------------------------------------------
-    # Get Active Rules
-    # ------------------------------------------
+        return formula
+
+
+    # =====================================
+    # GET ACTIVE RULES
+    # =====================================
 
     def get_active_rules(self):
+
         return (
-            self.db.query(FormulaRule)
+            self.db.query(
+                FormulaRule
+            )
             .filter(
                 FormulaRule.is_active.is_(True)
             )
@@ -65,13 +60,60 @@ class FormulaRuleRepository(BaseRepository):
             .all()
         )
 
-    # ------------------------------------------
-    # Get Rules By Template
-    # ------------------------------------------
 
-    def get_by_template(self, template_id: int):
+    # =====================================
+    # GET BY ID
+    # =====================================
+
+    def get_by_id(
+        self,
+        formula_id: int,
+    ):
+
         return (
-            self.db.query(FormulaRule)
+            self.db.query(
+                FormulaRule
+            )
+            .filter(
+                FormulaRule.id == formula_id
+            )
+            .first()
+        )
+
+
+    # =====================================
+    # GET BY CODE
+    # =====================================
+
+    def get_by_code(
+        self,
+        formula_code: str,
+    ):
+
+        return (
+            self.db.query(
+                FormulaRule
+            )
+            .filter(
+                FormulaRule.formula_code == formula_code
+            )
+            .first()
+        )
+
+
+    # =====================================
+    # GET BY TEMPLATE
+    # =====================================
+
+    def get_by_template(
+        self,
+        template_id: int,
+    ):
+
+        return (
+            self.db.query(
+                FormulaRule
+            )
             .filter(
                 FormulaRule.template_id == template_id
             )
@@ -81,27 +123,33 @@ class FormulaRuleRepository(BaseRepository):
             .all()
         )
 
-    # ------------------------------------------
-    # Create
-    # ------------------------------------------
 
-    def create_rule(self, rule: FormulaRule):
-        self.db.add(rule)
-        self.db.commit()
-        self.db.refresh(rule)
-        return rule
+    # =====================================
+    # UPDATE
+    # =====================================
 
-    # ------------------------------------------
-    # Update
-    # ------------------------------------------
+    def update_rule(
+        self,
+    ):
 
-    def update_rule(self):
         self.db.commit()
 
-    # ------------------------------------------
-    # Delete
-    # ------------------------------------------
 
-    def delete_rule(self, rule: FormulaRule):
-        self.db.delete(rule)
+    # =====================================
+    # DELETE (SOFT DELETE)
+    # =====================================
+
+    def delete_rule(
+        self,
+        formula: FormulaRule,
+    ):
+
+        setattr(
+            formula,
+            "is_active",
+            False,
+        )
+
         self.db.commit()
+
+        return True
