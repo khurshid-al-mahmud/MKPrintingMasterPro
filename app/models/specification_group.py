@@ -1,159 +1,93 @@
 """
-MKPrintingMasterPro ERP
-Build-013
+Specification Group Model.
 
-Specification Group Model
-
-Purpose:
-Stores Dynamic Specification Groups.
-
-Example
-
-General
-Paper
-Printing
-Binding
-Finishing
-Packaging
-Machine
-Cost
-
-Status:
-Production Ready
+Groups fields inside
+a Product Template.
 """
 
 from datetime import datetime
 
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Boolean,
-    DateTime,
-    ForeignKey,
-    Text
-)
-
+from sqlalchemy import Boolean
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-from app.database.base import Base
+from app.models.base import Base
 
 
 class SpecificationGroup(Base):
+    """
+    Specification Group Master.
+    """
+
     __tablename__ = "specification_groups"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+        index=True,
+    )
 
-    # -------------------------
-    # Identity
-    # -------------------------
-
-    group_code = Column(
-        String(50),
+    group_code: Mapped[str] = mapped_column(
+        String(30),
         unique=True,
-        nullable=False
+        nullable=False,
+        index=True,
     )
 
-    group_name_en = Column(
+    group_name: Mapped[str] = mapped_column(
         String(150),
-        nullable=False
+        nullable=False,
+        index=True,
     )
 
-    group_name_bn = Column(
-        String(150),
-        nullable=True
-    )
-
-    description = Column(
-        Text,
-        nullable=True
-    )
-
-    # -------------------------
-    # Parent Template
-    # -------------------------
-
-    template_id = Column(
-        Integer,
+    template_id: Mapped[int] = mapped_column(
         ForeignKey("product_templates.id"),
-        nullable=False
+        nullable=False,
+        index=True,
     )
 
-    # -------------------------
-    # Display
-    # -------------------------
-
-    display_order = Column(
+    display_order: Mapped[int] = mapped_column(
         Integer,
-        default=1
+        default=1,
+        nullable=False,
     )
 
-    icon = Column(
-        String(100),
-        nullable=True
+    description: Mapped[str | None] = mapped_column(
+        String(300),
+        nullable=True,
     )
 
-    collapsible = Column(
+    is_active: Mapped[bool] = mapped_column(
         Boolean,
-        default=False
+        default=True,
+        nullable=False,
     )
 
-    collapsed_default = Column(
-        Boolean,
-        default=False
-    )
-
-    # -------------------------
-    # Status
-    # -------------------------
-
-    is_active = Column(
-        Boolean,
-        default=True
-    )
-
-    # -------------------------
-    # Audit
-    # -------------------------
-
-    created_by = Column(
-        String(100)
-    )
-
-    updated_by = Column(
-        String(100)
-    )
-
-    created_at = Column(
-        DateTime,
-        default=datetime.utcnow
-    )
-
-    updated_at = Column(
-        DateTime,
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
         default=datetime.utcnow,
-        onupdate=datetime.utcnow
+        nullable=False,
     )
 
-    # -------------------------
-    # Relationship
-    # -------------------------
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
+        nullable=False,
+    )
 
     template = relationship(
         "ProductTemplate",
-        back_populates="specification_groups"
+        back_populates="specification_groups",
     )
-
     fields = relationship(
-        "SpecificationField",
-        back_populates="group",
-        cascade="all, delete-orphan"
-    )
-
-    def __repr__(self):
-
-        return (
-            f"<SpecificationGroup("
-            f"{self.group_code}, "
-            f"{self.group_name_en})>"
-        )
+    "SpecificationField",
+    back_populates="group",
+    cascade="all, delete-orphan"
+)

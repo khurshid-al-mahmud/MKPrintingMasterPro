@@ -1,3 +1,5 @@
+# ===== START SpecificationField.py PART-1 =====
+
 """
 MKPrintingMasterPro ERP
 Build-013
@@ -20,22 +22,28 @@ from sqlalchemy import (
     Boolean,
     DateTime,
     ForeignKey,
-    Text
+    Text,
 )
 
 from sqlalchemy.orm import relationship
 
-from app.database.base import Base
+from app.models.base import Base
+
+from app.models.specification_group import SpecificationGroup
+from app.models.field_option import FieldOption
 
 
 class SpecificationField(Base):
+
     __tablename__ = "specification_fields"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
 
-    # --------------------------------------------------
     # Identity
-    # --------------------------------------------------
 
     field_code = Column(
         String(100),
@@ -58,9 +66,7 @@ class SpecificationField(Base):
         nullable=True
     )
 
-    # --------------------------------------------------
     # Parent Group
-    # --------------------------------------------------
 
     group_id = Column(
         Integer,
@@ -68,9 +74,7 @@ class SpecificationField(Base):
         nullable=False
     )
 
-    # --------------------------------------------------
     # Data Type
-    # --------------------------------------------------
 
     data_type = Column(
         String(50),
@@ -82,9 +86,7 @@ class SpecificationField(Base):
         nullable=False
     )
 
-    # --------------------------------------------------
     # UI
-    # --------------------------------------------------
 
     placeholder_en = Column(String(200))
 
@@ -96,9 +98,8 @@ class SpecificationField(Base):
 
     icon = Column(String(100))
 
-    # --------------------------------------------------
+
     # Behaviour
-    # --------------------------------------------------
 
     is_required = Column(
         Boolean,
@@ -125,9 +126,8 @@ class SpecificationField(Base):
         default=False
     )
 
-    # --------------------------------------------------
+
     # Display
-    # --------------------------------------------------
 
     display_order = Column(
         Integer,
@@ -139,50 +139,65 @@ class SpecificationField(Base):
         default=12
     )
 
-    # --------------------------------------------------
+
     # Validation
-    # --------------------------------------------------
 
-    minimum_value = Column(String(100))
+    minimum_value = Column(
+        String(100)
+    )
 
-    maximum_value = Column(String(100))
+    maximum_value = Column(
+        String(100)
+    )
 
-    minimum_length = Column(Integer)
+    minimum_length = Column(
+        Integer
+    )
 
-    maximum_length = Column(Integer)
+    maximum_length = Column(
+        Integer
+    )
 
-    regex_pattern = Column(Text)
+    regex_pattern = Column(
+        Text
+    )
 
-    validation_message = Column(Text)
+    validation_message = Column(
+        Text
+    )
 
-    # --------------------------------------------------
+
     # Unit
-    # --------------------------------------------------
 
-    unit = Column(String(100))
+    unit = Column(
+        String(100)
+    )
 
-    # --------------------------------------------------
+
     # Formula
-    # --------------------------------------------------
 
-    formula_reference = Column(String(200))
+    formula_reference = Column(
+        String(200)
+    )
 
-    # --------------------------------------------------
+
     # Status
-    # --------------------------------------------------
 
     is_active = Column(
         Boolean,
         default=True
     )
 
-    # --------------------------------------------------
+
     # Audit
-    # --------------------------------------------------
 
-    created_by = Column(String(100))
+    created_by = Column(
+        String(100)
+    )
 
-    updated_by = Column(String(100))
+    updated_by = Column(
+        String(100)
+    )
 
     created_at = Column(
         DateTime,
@@ -195,14 +210,14 @@ class SpecificationField(Base):
         onupdate=datetime.utcnow
     )
 
-    # --------------------------------------------------
+
     # Relationship
-    # --------------------------------------------------
 
     group = relationship(
         "SpecificationGroup",
         back_populates="fields"
     )
+
 
     field_options = relationship(
         "FieldOption",
@@ -210,11 +225,13 @@ class SpecificationField(Base):
         cascade="all, delete-orphan"
     )
 
+
     template_mappings = relationship(
         "TemplateFieldMapping",
         back_populates="field",
         cascade="all, delete-orphan"
     )
+
 
     validation_rules = relationship(
         "ValidationRule",
@@ -222,11 +239,26 @@ class SpecificationField(Base):
         cascade="all, delete-orphan"
     )
 
+
+    # Dependency Rules (Source Field)
+
     dependency_rules = relationship(
         "SpecificationDependencyRule",
-        back_populates="field",
-        cascade="all, delete-orphan"
+        foreign_keys="SpecificationDependencyRule.source_field_id",
+        back_populates="source_field",
+        cascade="all, delete-orphan",
     )
+
+
+    # Dependency Rules (Target Field)
+
+    target_dependency_rules = relationship(
+        "SpecificationDependencyRule",
+        foreign_keys="SpecificationDependencyRule.target_field_id",
+        back_populates="target_field",
+        cascade="all, delete-orphan",
+    )
+
 
     def __repr__(self):
 

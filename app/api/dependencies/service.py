@@ -10,6 +10,11 @@ from sqlalchemy.orm import Session
 
 from app.api.dependencies.database import get_db
 
+
+# ==========================
+# Repositories
+# ==========================
+
 from app.repositories.customer_repository import CustomerRepository
 from app.repositories.employee_repository import EmployeeRepository
 from app.repositories.machine_repository import MachineRepository
@@ -23,6 +28,20 @@ from app.repositories.product_repository import ProductRepository
 from app.repositories.product_template_repository import ProductTemplateRepository
 from app.repositories.product_category_repository import ProductCategoryRepository
 from app.repositories.supplier_repository import SupplierRepository
+
+from app.repositories.specification_group_repository import (
+    SpecificationGroupRepository,
+)
+
+from app.repositories.specification_field_repository import (
+    SpecificationFieldRepository,
+)
+
+
+
+# ==========================
+# Services
+# ==========================
 
 from app.services.customer_service import CustomerService
 from app.services.employee_service import EmployeeService
@@ -38,130 +57,220 @@ from app.services.product_template_service import ProductTemplateService
 from app.services.product_category_service import ProductCategoryService
 from app.services.supplier_service import SupplierService
 
+from app.services.specification_group_service import (
+    SpecificationGroupService,
+)
+
+from app.services.specification_field_service import (
+    SpecificationFieldService,
+)
+
+
+
+# ==========================
+# Party
+# ==========================
 
 def get_party_service(
     db: Session = Depends(get_db),
 ) -> PartyService:
-    """Provide PartyService dependency."""
 
     return PartyService(
         PartyRepository(db),
     )
 
 
+
+# ==========================
+# Supplier
+# ==========================
+
 def get_supplier_service(
     db: Session = Depends(get_db),
 ) -> SupplierService:
-    """Provide SupplierService dependency."""
 
     return SupplierService(
         SupplierRepository(db),
     )
 
 
+
+# ==========================
+# Customer
+# ==========================
+
 def get_customer_service(
     db: Session = Depends(get_db),
 ) -> CustomerService:
-    """Provide CustomerService dependency."""
 
     return CustomerService(
         CustomerRepository(db),
     )
 
 
+
+# ==========================
+# Employee
+# ==========================
+
 def get_employee_service(
     db: Session = Depends(get_db),
 ) -> EmployeeService:
-    """Provide EmployeeService dependency."""
 
     return EmployeeService(
         EmployeeRepository(db),
     )
 
 
+
+# ==========================
+# Print Partner
+# ==========================
+
 def get_print_partner_service(
     db: Session = Depends(get_db),
 ) -> PrintPartnerService:
-    """Provide PrintPartnerService dependency."""
 
     return PrintPartnerService(
         PrintPartnerRepository(db),
     )
 
 
+
+# ==========================
+# Machine
+# ==========================
+
 def get_machine_service(
     db: Session = Depends(get_db),
 ) -> MachineService:
-    """Provide MachineService dependency."""
 
     return MachineService(
         MachineRepository(db),
     )
 
 
+
+# ==========================
+# Product
+# ==========================
+
 def get_product_service(
     db: Session = Depends(get_db),
 ) -> ProductService:
-    """Provide ProductService dependency."""
 
     return ProductService(
         ProductRepository(db),
     )
 
+
+
+# ==========================
+# Product Template
+# ==========================
+
 def get_product_template_service(
     db: Session = Depends(get_db),
 ) -> ProductTemplateService:
-    """Provide ProductTemplateService dependency."""
 
     return ProductTemplateService(
         ProductTemplateRepository(db),
     )
 
+
+
+# ==========================
+# Product Category
+# ==========================
+
 def get_product_category_service(
     db: Session = Depends(get_db),
 ) -> ProductCategoryService:
-    """Provide ProductCategoryService dependency."""
 
     return ProductCategoryService(
         ProductCategoryRepository(db),
     )
 
 
+
+# ==========================
+# Paper Type
+# ==========================
+
 def get_paper_type_service(
     db: Session = Depends(get_db),
 ) -> PaperTypeService:
-    """Provide PaperTypeService dependency."""
 
     return PaperTypeService(
         PaperTypeRepository(db),
     )
 
 
+
+# ==========================
+# Paper Brand
+# ==========================
+
 def get_paper_brand_service(
     db: Session = Depends(get_db),
 ) -> PaperBrandService:
-    """Provide PaperBrandService dependency."""
 
     return PaperBrandService(
         PaperBrandRepository(db),
     )
 
 
+
+# ==========================
+# Paper GSM
+# ==========================
+
 def get_paper_gsm_service(
     db: Session = Depends(get_db),
 ) -> PaperGSMService:
-    """Provide PaperGSMService dependency."""
 
     return PaperGSMService(
         PaperGSMRepository(db),
     )
 
 
+
+# ==========================
+# Paper Size
+# ==========================
+
 def get_paper_size_service(
     db: Session = Depends(get_db),
 ) -> PaperSizeService:
-    """Provide PaperSizeService dependency."""
 
     return PaperSizeService(
         PaperSizeRepository(db),
+    )
+
+
+
+# ==================================================
+# Specification Group
+# ==================================================
+
+def get_specification_group_service(
+    db: Session = Depends(get_db),
+) -> SpecificationGroupService:
+
+    return SpecificationGroupService(
+        SpecificationGroupRepository(db),
+    )
+
+
+
+# ==================================================
+# Specification Field
+# ==================================================
+
+def get_specification_field_service(
+    db: Session = Depends(get_db),
+) -> SpecificationFieldService:
+
+    return SpecificationFieldService(
+        SpecificationFieldRepository(db),
     )

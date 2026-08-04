@@ -1,5 +1,7 @@
 import logging
 
+import app.models
+
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from starlette.requests import Request
@@ -20,6 +22,8 @@ from app.api import product_category
 from app.api import product_template
 from app.api import supplier
 from app.api import system_setting
+from app.api import specification_group
+from app.api import specification_field
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -73,3 +77,5 @@ app.include_router(paper_brand.router)
 app.include_router(paper_gsm.router)
 app.include_router(paper_size.router)
 app.include_router(binding_type.router)
+app.include_router(specification_group.router)
+app.include_router(specification_field.router)

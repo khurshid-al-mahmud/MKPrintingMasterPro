@@ -25,7 +25,7 @@ from sqlalchemy import (
 
 from sqlalchemy.orm import relationship
 
-from app.database.base import Base
+from app.models.base import Base
 
 
 class SpecificationDependencyRule(Base):
@@ -141,10 +141,11 @@ class SpecificationDependencyRule(Base):
     )
 
     source_field = relationship(
-        "SpecificationField",
-        foreign_keys=[source_field_id]
-    )
-
+    "SpecificationField",
+    foreign_keys=[source_field_id],
+    back_populates="dependency_rules",
+)
+    
     target_field = relationship(
         "SpecificationField",
         foreign_keys=[target_field_id]

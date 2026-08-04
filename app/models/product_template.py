@@ -81,7 +81,54 @@ class ProductTemplate(Base):
         nullable=False,
     )
 
+    # -------------------------------------
+    # Relationships
+    # -------------------------------------
+
     product = relationship(
         "Product",
         back_populates="templates",
     )
+
+    specification_groups = relationship(
+        "SpecificationGroup",
+        back_populates="template",
+        cascade="all, delete-orphan",
+    )
+
+    template_fields = relationship(
+        "TemplateFieldMapping",
+        back_populates="template",
+        cascade="all, delete-orphan",
+    )
+
+    dependency_rules = relationship(
+        "SpecificationDependencyRule",
+        back_populates="template",
+        cascade="all, delete-orphan",
+    )
+
+    formula_rules = relationship(
+        "FormulaRule",
+        back_populates="template",
+        cascade="all, delete-orphan",
+    )
+
+    template_versions = relationship(
+        "TemplateVersion",
+        back_populates="template",
+        cascade="all, delete-orphan",
+    )
+
+    audit_logs = relationship(
+        "SpecificationAudit",
+        back_populates="template",
+        cascade="all, delete-orphan",
+    )
+
+    def __repr__(self):
+        return (
+            f"<ProductTemplate("
+            f"{self.template_code}, "
+            f"{self.template_name})>"
+        )

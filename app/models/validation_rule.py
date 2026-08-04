@@ -21,18 +21,26 @@ from sqlalchemy import (
     Boolean,
     DateTime,
     ForeignKey,
-    Text
+    Text,
 )
 
 from sqlalchemy.orm import relationship
 
-from app.database.base import Base
+from app.models.base import Base
 
 
 class ValidationRule(Base):
+    """
+    Validation Rule Master.
+    """
+
     __tablename__ = "validation_rules"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True,
+    )
 
     # -------------------------------------
     # Parent Field
@@ -41,7 +49,7 @@ class ValidationRule(Base):
     field_id = Column(
         Integer,
         ForeignKey("specification_fields.id"),
-        nullable=False
+        nullable=False,
     )
 
     # -------------------------------------
@@ -51,17 +59,17 @@ class ValidationRule(Base):
     rule_code = Column(
         String(100),
         unique=True,
-        nullable=False
+        nullable=False,
     )
 
     rule_name = Column(
         String(200),
-        nullable=False
+        nullable=False,
     )
 
     description = Column(
         Text,
-        nullable=True
+        nullable=True,
     )
 
     # -------------------------------------
@@ -70,34 +78,32 @@ class ValidationRule(Base):
 
     validation_type = Column(
         String(100),
-        nullable=False
+        nullable=False,
     )
-
-    # Examples:
-    # REQUIRED
-    # MIN
-    # MAX
-    # RANGE
-    # REGEX
-    # EMAIL
-    # PHONE
-    # DATE
-    # UNIQUE
-    # CUSTOM
 
     # -------------------------------------
     # Validation Values
     # -------------------------------------
 
-    minimum_value = Column(String(100))
+    minimum_value = Column(
+        String(100),
+    )
 
-    maximum_value = Column(String(100))
+    maximum_value = Column(
+        String(100),
+    )
 
-    regex_pattern = Column(Text)
+    regex_pattern = Column(
+        Text,
+    )
 
-    validation_expression = Column(Text)
+    validation_expression = Column(
+        Text,
+    )
 
-    error_message = Column(Text)
+    error_message = Column(
+        Text,
+    )
 
     # -------------------------------------
     # Behaviour
@@ -105,44 +111,47 @@ class ValidationRule(Base):
 
     stop_processing = Column(
         Boolean,
-        default=True
+        default=True,
     )
 
     is_active = Column(
         Boolean,
-        default=True
+        default=True,
     )
 
     # -------------------------------------
     # Audit
     # -------------------------------------
 
-    created_by = Column(String(100))
+    created_by = Column(
+        String(100),
+    )
 
-    updated_by = Column(String(100))
+    updated_by = Column(
+        String(100),
+    )
 
     created_at = Column(
         DateTime,
-        default=datetime.utcnow
+        default=datetime.utcnow,
     )
 
     updated_at = Column(
         DateTime,
         default=datetime.utcnow,
-        onupdate=datetime.utcnow
+        onupdate=datetime.utcnow,
     )
 
     # -------------------------------------
     # Relationship
     # -------------------------------------
 
-field = relationship(
-    "SpecificationField",
-    back_populates="validation_rules"
-)
+    field = relationship(
+        "SpecificationField",
+        back_populates="validation_rules",
+    )
 
-def __repr__(self):
-
+    def __repr__(self):
         return (
             f"<ValidationRule("
             f"{self.rule_code})>"
