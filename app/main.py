@@ -24,6 +24,8 @@ from app.api import supplier
 from app.api import system_setting
 from app.api import specification_group
 from app.api import specification_field
+from app.api import field_option
+from app.api import validation_rule
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -79,3 +81,5 @@ app.include_router(paper_size.router)
 app.include_router(binding_type.router)
 app.include_router(specification_group.router)
 app.include_router(specification_field.router)
+app.include_router(field_option.router)
+app.include_router(validation_rule.router)

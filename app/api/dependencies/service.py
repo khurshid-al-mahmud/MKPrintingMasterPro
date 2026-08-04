@@ -37,7 +37,13 @@ from app.repositories.specification_field_repository import (
     SpecificationFieldRepository,
 )
 
+from app.repositories.field_option_repository import (
+    FieldOptionRepository,
+)
 
+from app.repositories.validation_rule_repository import (
+    ValidationRuleRepository,
+)
 
 # ==========================
 # Services
@@ -65,7 +71,13 @@ from app.services.specification_field_service import (
     SpecificationFieldService,
 )
 
+from app.services.field_option_service import (
+    FieldOptionService,
+)
 
+from app.services.validation_rule_service import (
+    ValidationRuleService,
+)
 
 # ==========================
 # Party
@@ -273,4 +285,27 @@ def get_specification_field_service(
 
     return SpecificationFieldService(
         SpecificationFieldRepository(db),
+    )
+# ==================================================
+# Field Option
+# ==================================================
+
+def get_field_option_service(
+    db: Session = Depends(get_db),
+) -> FieldOptionService:
+
+    return FieldOptionService(
+        FieldOptionRepository(db),
+    )
+
+# ==================================================
+# Validation Rule
+# ==================================================
+
+def get_validation_rule_service(
+    db: Session = Depends(get_db),
+) -> ValidationRuleService:
+
+    return ValidationRuleService(
+        ValidationRuleRepository(db),
     )
