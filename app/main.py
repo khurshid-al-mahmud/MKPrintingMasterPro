@@ -28,6 +28,7 @@ from app.api import specification_field
 from app.api import formula_rule
 from app.api import field_option
 from app.api import validation_rule
+from app.api import template_field_mapping
 from app.api import specification_dependency_rule
 
 
@@ -113,16 +114,8 @@ app.include_router(field_option.router)
 
 app.include_router(validation_rule.router)
 app.include_router(
-    specification_dependency_rule.router
+    template_field_mapping.router
 )
-
-# Formula Engine Modules
-app.include_router(formula_rule.router)
-
-app.include_router(field_option.router)
-
-app.include_router(validation_rule.router)
-
 app.include_router(
     specification_dependency_rule.router
 )

@@ -49,6 +49,10 @@ from app.repositories.formula_rule_repository import (
     FormulaRuleRepository,
 )
 
+from app.repositories.template_field_mapping_repository import (
+    TemplateFieldMappingRepository,
+)
+
 from app.repositories.specification_dependency_rule_repository import (
     SpecificationDependencyRuleRepository,
 )
@@ -90,6 +94,10 @@ from app.services.validation_rule_service import (
 
 from app.services.formula_rule_service import (
     FormulaRuleService,
+)
+
+from app.services.template_field_mapping_service import (
+    TemplateFieldMappingService,
 )
 
 from app.services.specification_dependency_rule_service import (
@@ -348,7 +356,17 @@ def get_formula_rule_service(
         FormulaRuleRepository(db),
     )
 
+# ==================================================
+# Template Field Mapping
+# ==================================================
 
+def get_template_field_mapping_service(
+    db: Session = Depends(get_db),
+) -> TemplateFieldMappingService:
+
+    return TemplateFieldMappingService(
+        TemplateFieldMappingRepository(db),
+    )
 
 # ==================================================
 # Specification Dependency Rule
