@@ -1,7 +1,10 @@
 """
-Job Order Master Model.
+MKPrintingMasterPro ERP
+
+Job Order Master Model
 
 Stores Job Order header information.
+Build-030
 """
 
 from datetime import date
@@ -21,7 +24,9 @@ from app.models.base import Base
 
 
 class JobOrderMaster(Base):
-    """Job Order Master."""
+    """
+    Job Order Master.
+    """
 
     __tablename__ = "job_order_master"
 
@@ -97,6 +102,11 @@ class JobOrderMaster(Base):
         nullable=False,
     )
 
+
+    # ==========================
+    # Basic Relationships
+    # ==========================
+
     customer = relationship(
         "Party",
     )
@@ -110,8 +120,25 @@ class JobOrderMaster(Base):
         back_populates="job_orders",
     )
 
+
+    # ==========================
+    # Job Order Items
+    # ==========================
+
     items = relationship(
         "JobOrderItem",
+        back_populates="job_order",
+        cascade="all, delete-orphan",
+    )
+
+
+    # ==========================
+    # Production Order Relationship
+    # Build-031
+    # ==========================
+
+    production_orders = relationship(
+        "ProductionOrderMaster",
         back_populates="job_order",
         cascade="all, delete-orphan",
     )

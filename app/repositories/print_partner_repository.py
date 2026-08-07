@@ -32,9 +32,25 @@ class PrintPartnerRepository:
         Create new print partner.
         """
 
+        # Check Party exists
+        party = (
+            self.db.query(Party)
+            .filter(
+                Party.id == partner_data["party_id"]
+            )
+            .first()
+        )
+
+        if party is None:
+            raise ValueError(
+                "Party ID does not exist."
+            )
+
+
         partner = PrintPartnerProfile(
             **partner_data
         )
+
 
         self.db.add(
             partner
@@ -42,9 +58,11 @@ class PrintPartnerRepository:
 
         self.db.commit()
 
+
         self.db.refresh(
             partner
         )
+
 
         return partner
 
@@ -52,11 +70,7 @@ class PrintPartnerRepository:
     def get_by_id(
         self,
         partner_id: int,
-    ) -> PrintPartnerProfile | None:
-        """
-        Get print partner by ID.
-        """
-
+    ):
         return (
             self.db.query(
                 PrintPartnerProfile
@@ -71,11 +85,7 @@ class PrintPartnerRepository:
 
     def get_all(
         self,
-    ) -> list[PrintPartnerProfile]:
-        """
-        Get all print partners.
-        """
-
+    ):
         return (
             self.db.query(
                 PrintPartnerProfile
@@ -91,10 +101,7 @@ class PrintPartnerRepository:
         self,
         partner_id: int,
         partner_data: dict,
-    ) -> PrintPartnerProfile | None:
-        """
-        Update print partner.
-        """
+    ):
 
         partner = self.get_by_id(
             partner_id
@@ -105,6 +112,7 @@ class PrintPartnerRepository:
 
 
         for key, value in partner_data.items():
+
             setattr(
                 partner,
                 key,
@@ -124,10 +132,7 @@ class PrintPartnerRepository:
     def delete(
         self,
         partner_id: int,
-    ) -> bool:
-        """
-        Soft delete print partner.
-        """
+    ):
 
         partner = self.get_by_id(
             partner_id
@@ -147,10 +152,7 @@ class PrintPartnerRepository:
     def exists_by_code(
         self,
         partner_code: str,
-    ) -> bool:
-        """
-        Check duplicate partner code.
-        """
+    ):
 
         return (
             self.db.query(
@@ -167,10 +169,7 @@ class PrintPartnerRepository:
     def search(
         self,
         keyword: str,
-    ) -> list[PrintPartnerProfile]:
-        """
-        Search print partner.
-        """
+    ):
 
         return (
             self.db.query(
@@ -188,9 +187,11 @@ class PrintPartnerRepository:
                     Party.party_name.ilike(
                         f"%{keyword}%"
                     ),
+
                     Party.mobile.ilike(
                         f"%{keyword}%"
                     ),
+
                     PrintPartnerProfile.partner_code.ilike(
                         f"%{keyword}%"
                     ),

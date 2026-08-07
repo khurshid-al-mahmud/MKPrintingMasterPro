@@ -22,7 +22,9 @@ class QuotationBase(BaseModel):
     """
 
     quotation_no: str
+
     quotation_date: date | None = None
+    
     customer_id: int
 
     contact_person: str | None = None

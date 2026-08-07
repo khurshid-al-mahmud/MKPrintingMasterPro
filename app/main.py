@@ -1,128 +1,39 @@
-import logging
+"""
+MKPrintingMasterPro ERP
 
-import app.models
+FastAPI Application Main
+
+Build-032
+"""
 
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
-from starlette.requests import Request
 
-
-from app.api import binding_type
-from app.api import company_profile
-from app.api import customer
-from app.api import employee
-from app.api import machine
-from app.api import paper_brand
-from app.api import paper_gsm
-from app.api import paper_size
-from app.api import paper_type
-from app.api import party
-from app.api import print_partner
-from app.api import product
-from app.api import product_category
-from app.api import product_template
-from app.api import supplier
-from app.api import system_setting
-from app.api import specification_group
-from app.api import specification_field
-from app.api import formula_rule
-from app.api import field_option
-from app.api import validation_rule
-from app.api import template_field_mapping
-from app.api import specification_dependency_rule
-from app.api import specification_runtime
-
-from app.api import quotation_router
-from app.api import quotation_item_router
-from app.api import quotation_conversion
-
-from app.api import invoice
-from app.api import invoice_item
-
-
-# ==========================
-# Job Order Modules
-# Build-030
-# ==========================
-
-from app.api import job_order
-from app.api import job_order_status_history
-
-
-logging.basicConfig(
-    level=logging.DEBUG
+from app.api import (
+    company_profile,
+    system_setting,
+    machine,
+    binding_type,
+    party,
+    operation_master,
+    operation_assignment,
+    production_order,
+    job_order,
+    job_order_status_history,
+    quotation_conversion,
+    specification_runtime,
 )
 
 
 app = FastAPI(
     title="MKPrintingMasterPro ERP",
-    version="0.1.0"
+    version="Build-032",
+    description="Printing ERP Management System",
 )
-
-
-@app.exception_handler(Exception)
-async def global_exception_handler(
-    request: Request,
-    exc: Exception,
-):
-
-    logging.exception(exc)
-
-    return JSONResponse(
-        status_code=500,
-        content={
-            "detail": str(exc)
-        }
-    )
-
-
-@app.get("/")
-def root():
-
-    return {
-        "message": "MKPrintingMasterPro ERP API is running"
-    }
 
 
 # ==========================
-# Master Modules
+# API ROUTERS
 # ==========================
-
-app.include_router(
-    party.router
-)
-
-app.include_router(
-    supplier.router
-)
-
-app.include_router(
-    customer.router
-)
-
-app.include_router(
-    employee.router
-)
-
-app.include_router(
-    print_partner.router
-)
-
-app.include_router(
-    product.router
-)
-
-app.include_router(
-    product_category.router
-)
-
-app.include_router(
-    product_template.router
-)
-
-app.include_router(
-    machine.router
-)
 
 app.include_router(
     company_profile.router
@@ -133,19 +44,7 @@ app.include_router(
 )
 
 app.include_router(
-    paper_type.router
-)
-
-app.include_router(
-    paper_brand.router
-)
-
-app.include_router(
-    paper_gsm.router
-)
-
-app.include_router(
-    paper_size.router
+    machine.router
 )
 
 app.include_router(
@@ -153,36 +52,31 @@ app.include_router(
 )
 
 app.include_router(
-    specification_group.router
+    party.router
 )
 
 app.include_router(
-    specification_field.router
-)
-
-
-# ==========================
-# Formula Engine Modules
-# ==========================
-
-app.include_router(
-    formula_rule.router
+    operation_master.router
 )
 
 app.include_router(
-    field_option.router
+    operation_assignment.router
 )
 
 app.include_router(
-    validation_rule.router
+    production_order.router
 )
 
 app.include_router(
-    template_field_mapping.router
+    job_order.router
 )
 
 app.include_router(
-    specification_dependency_rule.router
+    job_order_status_history.router
+)
+
+app.include_router(
+    quotation_conversion.router
 )
 
 app.include_router(
@@ -191,50 +85,13 @@ app.include_router(
 
 
 # ==========================
-# Quotation Modules
+# ROOT TEST
 # ==========================
 
-app.include_router(
-    quotation_router
-)
-
-app.include_router(
-    quotation_item_router
-)
-
-app.include_router(
-    quotation_conversion.router
-)
-
-
-# ==========================
-# Invoice Modules
-# ==========================
-
-app.include_router(
-    invoice.router
-)
-
-app.include_router(
-    invoice_item.router
-)
-
-
-# ==========================
-# Job Order Modules
-# Build-030
-# ==========================
-
-app.include_router(
-    job_order.router
-)
-
-
-# ==========================
-# Job Order Status History
-# Build-030 Phase-7
-# ==========================
-
-app.include_router(
-    job_order_status_history.router
-)
+@app.get("/")
+def root():
+    return {
+        "app": "MKPrintingMasterPro ERP",
+        "version": "Build-032",
+        "status": "Running"
+    }

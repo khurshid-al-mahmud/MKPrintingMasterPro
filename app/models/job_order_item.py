@@ -81,6 +81,10 @@ class JobOrderItem(Base):
         nullable=False,
     )
 
+    # ===========================
+    # Relationships
+    # ===========================
+
     job_order = relationship(
         "JobOrderMaster",
         back_populates="items",

@@ -21,19 +21,19 @@ from .employee_profile import EmployeeProfile
 from .print_partner_profile import PrintPartnerProfile
 
 
-
 # ===========================
 # Paper & Production Masters
 # ===========================
 
 from .paper_size import PaperSize
 from .paper_brand import PaperBrand
+from .paper_type import PaperType
+from .paper_gsm import PaperGSM
 from .binding_type import BindingType
 
 from .company_profile import CompanyProfile
 from .system_setting import SystemSetting
 from .machine import Machine
-
 
 
 # ===========================
@@ -42,15 +42,23 @@ from .machine import Machine
 
 from .product import Product
 from .product_category import ProductCategory
-
 from .product_template import ProductTemplate
+
+
+# ===========================
+# Quotation Management
+# ===========================
 
 from .quotation_master import QuotationMaster
 from .quotation_item import QuotationItem
 
+
+# ===========================
+# Invoice Management
+# ===========================
+
 from .invoice_master import InvoiceMaster
 from .invoice_item import InvoiceItem
-
 
 
 # ===========================
@@ -62,30 +70,39 @@ from .job_order_item import JobOrderItem
 from .job_order_status_history import JobOrderStatusHistory
 
 
+# ===========================
+# Build-031 Production Order
+# ===========================
+
+from .production_order_master import ProductionOrderMaster
+
+
+# ===========================
+# Build-031 Operation Management
+# ===========================
+
+from .operation_master import OperationMaster
+from .operation_assignment import OperationAssignment
+
 
 # ===========================
 # Dynamic Specification Engine
 # ===========================
 
 from .specification_group import SpecificationGroup
-
 from .field_option import FieldOption
-
 from .specification_field import SpecificationField
-
 from .template_field_mapping import TemplateFieldMapping
-
 from .specification_dependency_rule import SpecificationDependencyRule
-
 from .formula_rule import FormulaRule
-
 from .template_version import TemplateVersion
-
 from .specification_audit import SpecificationAudit
-
 from .validation_rule import ValidationRule
 
 
+# ===========================
+# Public Model Registry
+# ===========================
 
 __all__ = [
 
@@ -105,19 +122,19 @@ __all__ = [
     "PrintPartnerProfile",
 
 
-
     # ===========================
-    # Masters
+    # Paper & Production Masters
     # ===========================
 
     "PaperSize",
     "PaperBrand",
+    "PaperType",
+    "PaperGSM",
     "BindingType",
 
     "CompanyProfile",
     "SystemSetting",
     "Machine",
-
 
 
     # ===========================
@@ -128,12 +145,21 @@ __all__ = [
     "ProductCategory",
     "ProductTemplate",
 
+
+    # ===========================
+    # Quotation Management
+    # ===========================
+
     "QuotationMaster",
     "QuotationItem",
 
+
+    # ===========================
+    # Invoice Management
+    # ===========================
+
     "InvoiceMaster",
     "InvoiceItem",
-
 
 
     # ===========================
@@ -145,26 +171,32 @@ __all__ = [
     "JobOrderStatusHistory",
 
 
+    # ===========================
+    # Build-031 Production Order
+    # ===========================
+
+    "ProductionOrderMaster",
+
+
+    # ===========================
+    # Build-031 Operation Management
+    # ===========================
+
+    "OperationMaster",
+    "OperationAssignment",
+
 
     # ===========================
     # Dynamic Specification Engine
     # ===========================
 
     "SpecificationGroup",
-
     "FieldOption",
-
     "SpecificationField",
-
     "TemplateFieldMapping",
-
     "SpecificationDependencyRule",
-
     "FormulaRule",
-
     "TemplateVersion",
-
     "SpecificationAudit",
-
     "ValidationRule",
 ]
