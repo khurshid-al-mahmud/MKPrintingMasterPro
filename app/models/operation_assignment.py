@@ -3,10 +3,9 @@ MKPrintingMasterPro ERP
 
 Operation Assignment Model
 
-Build-032
+Build-032 + Build-033
 
-Assigns individual production operations to
-internal departments or external parties.
+Assigns individual production operations and tracks execution.
 """
 
 from datetime import date, datetime
@@ -19,6 +18,7 @@ from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Text
 from sqlalchemy import UniqueConstraint
+
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
@@ -27,7 +27,9 @@ from app.models.base import Base
 
 
 class OperationAssignment(Base):
-    """Assign a production operation to a responsible party."""
+    """
+    Assign a production operation to a responsible party.
+    """
 
     __tablename__ = "operation_assignments"
 
@@ -150,17 +152,32 @@ class OperationAssignment(Base):
         nullable=False,
     )
 
+
+    # ==========================
+    # Relationships
+    # ==========================
+
     production_order = relationship(
         "ProductionOrderMaster",
         back_populates="operation_assignments",
     )
+
 
     operation = relationship(
         "OperationMaster",
         back_populates="operation_assignments",
     )
 
+
     assigned_party = relationship(
         "Party",
         foreign_keys=[assigned_party_id],
+    )
+
+
+    # Build-033
+    production_operation_executions = relationship(
+        "ProductionOperationExecution",
+        back_populates="operation_assignment",
+        cascade="all, delete-orphan",
     )
