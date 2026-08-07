@@ -29,6 +29,15 @@ from app.repositories.product_template_repository import ProductTemplateReposito
 from app.repositories.product_category_repository import ProductCategoryRepository
 from app.repositories.supplier_repository import SupplierRepository
 
+from app.repositories.quotation_item_repository import (
+    QuotationItemRepository,
+)
+
+from app.repositories.quotation_repository import QuotationRepository
+
+from app.repositories.invoice_repository import InvoiceRepository
+from app.repositories.invoice_item_repository import InvoiceItemRepository
+
 from app.repositories.specification_group_repository import (
     SpecificationGroupRepository,
 )
@@ -76,6 +85,17 @@ from app.services.product_template_service import ProductTemplateService
 from app.services.product_category_service import ProductCategoryService
 from app.services.supplier_service import SupplierService
 
+from app.services.quotation_item_service import (
+    QuotationItemService,
+)
+
+from app.services.quotation_service import QuotationService
+
+from app.services.invoice_service import InvoiceService
+from app.services.invoice_item_service import InvoiceItemService
+
+from app.services.date_time_service import DateTimeService
+
 from app.services.specification_group_service import (
     SpecificationGroupService,
 )
@@ -104,6 +124,9 @@ from app.services.specification_dependency_rule_service import (
     SpecificationDependencyRuleService,
 )
 
+from app.services.specification_runtime_service import (
+    SpecificationRuntimeService,
+)
 
 
 # ==================================================
@@ -119,7 +142,6 @@ def get_party_service(
     )
 
 
-
 # ==================================================
 # Supplier
 # ==================================================
@@ -131,7 +153,6 @@ def get_supplier_service(
     return SupplierService(
         SupplierRepository(db),
     )
-
 
 
 # ==================================================
@@ -147,7 +168,6 @@ def get_customer_service(
     )
 
 
-
 # ==================================================
 # Employee
 # ==================================================
@@ -159,7 +179,6 @@ def get_employee_service(
     return EmployeeService(
         EmployeeRepository(db),
     )
-
 
 
 # ==================================================
@@ -175,7 +194,6 @@ def get_print_partner_service(
     )
 
 
-
 # ==================================================
 # Machine
 # ==================================================
@@ -187,7 +205,6 @@ def get_machine_service(
     return MachineService(
         MachineRepository(db),
     )
-
 
 
 # ==================================================
@@ -203,7 +220,6 @@ def get_product_service(
     )
 
 
-
 # ==================================================
 # Product Template
 # ==================================================
@@ -215,7 +231,6 @@ def get_product_template_service(
     return ProductTemplateService(
         ProductTemplateRepository(db),
     )
-
 
 
 # ==================================================
@@ -231,6 +246,19 @@ def get_product_category_service(
     )
 
 
+# ==================================================
+# Quotation
+# ==================================================
+
+def get_quotation_service(
+    db: Session = Depends(get_db),
+) -> QuotationService:
+
+    return QuotationService(
+        QuotationRepository(db),
+        DateTimeService(db),
+    )
+
 
 # ==================================================
 # Paper Type
@@ -243,7 +271,6 @@ def get_paper_type_service(
     return PaperTypeService(
         PaperTypeRepository(db),
     )
-
 
 
 # ==================================================
@@ -259,7 +286,6 @@ def get_paper_brand_service(
     )
 
 
-
 # ==================================================
 # Paper GSM
 # ==================================================
@@ -271,7 +297,6 @@ def get_paper_gsm_service(
     return PaperGSMService(
         PaperGSMRepository(db),
     )
-
 
 
 # ==================================================
@@ -287,7 +312,6 @@ def get_paper_size_service(
     )
 
 
-
 # ==================================================
 # Specification Group
 # ==================================================
@@ -299,7 +323,6 @@ def get_specification_group_service(
     return SpecificationGroupService(
         SpecificationGroupRepository(db),
     )
-
 
 
 # ==================================================
@@ -315,7 +338,6 @@ def get_specification_field_service(
     )
 
 
-
 # ==================================================
 # Field Option
 # ==================================================
@@ -327,7 +349,6 @@ def get_field_option_service(
     return FieldOptionService(
         FieldOptionRepository(db),
     )
-
 
 
 # ==================================================
@@ -343,7 +364,6 @@ def get_validation_rule_service(
     )
 
 
-
 # ==================================================
 # Formula Rule
 # ==================================================
@@ -355,6 +375,7 @@ def get_formula_rule_service(
     return FormulaRuleService(
         FormulaRuleRepository(db),
     )
+
 
 # ==================================================
 # Template Field Mapping
@@ -368,6 +389,7 @@ def get_template_field_mapping_service(
         TemplateFieldMappingRepository(db),
     )
 
+
 # ==================================================
 # Specification Dependency Rule
 # ==================================================
@@ -378,4 +400,53 @@ def get_specification_dependency_rule_service(
 
     return SpecificationDependencyRuleService(
         SpecificationDependencyRuleRepository(db),
+    )
+
+
+# ==================================================
+# Specification Runtime
+# ==================================================
+
+def get_specification_runtime_service(
+    db: Session = Depends(get_db),
+) -> SpecificationRuntimeService:
+
+    return SpecificationRuntimeService(
+        db,
+    )
+
+# ==================================================
+# Quotation Item
+# ==================================================
+
+def get_quotation_item_service(
+    db: Session = Depends(get_db),
+) -> QuotationItemService:
+
+    return QuotationItemService(
+        QuotationItemRepository(db),
+    )
+# ==================================================
+# Invoice
+# ==================================================
+
+def get_invoice_service(
+    db: Session = Depends(get_db),
+) -> InvoiceService:
+
+    return InvoiceService(
+        InvoiceRepository(db),
+    )
+
+# ==================================================
+# Invoice Item
+# ==================================================
+
+def get_invoice_item_service(
+    db: Session = Depends(get_db),
+) -> InvoiceItemService:
+
+    return InvoiceItemService(
+        InvoiceItemRepository(db),
+        InvoiceRepository(db),
     )

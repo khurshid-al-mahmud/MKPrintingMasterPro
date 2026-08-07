@@ -27,6 +27,10 @@ from .field_option import router as field_option_router
 from .validation_rule import router as validation_rule_router
 from .formula_rule import router as formula_rule_router
 
+from .quotation import router as quotation_router
+from .quotation_item import router as quotation_item_router
+from .quotation_conversion import router as quotation_conversion_router
+
 
 __all__ = [
     "binding_type_router",
@@ -51,4 +55,8 @@ __all__ = [
     "field_option_router",
     "validation_rule_router",
     "formula_rule_router",
+
+    "quotation_router",
+    "quotation_item_router",
+    "quotation_conversion_router",
 ]

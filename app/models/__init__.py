@@ -21,6 +21,7 @@ from .employee_profile import EmployeeProfile
 from .print_partner_profile import PrintPartnerProfile
 
 
+
 # ===========================
 # Paper & Production Masters
 # ===========================
@@ -34,6 +35,7 @@ from .system_setting import SystemSetting
 from .machine import Machine
 
 
+
 # ===========================
 # Product Management
 # ===========================
@@ -42,6 +44,23 @@ from .product import Product
 from .product_category import ProductCategory
 
 from .product_template import ProductTemplate
+
+from .quotation_master import QuotationMaster
+from .quotation_item import QuotationItem
+
+from .invoice_master import InvoiceMaster
+from .invoice_item import InvoiceItem
+
+
+
+# ===========================
+# Build-030 Job Order
+# ===========================
+
+from .job_order_master import JobOrderMaster
+from .job_order_item import JobOrderItem
+from .job_order_status_history import JobOrderStatusHistory
+
 
 
 # ===========================
@@ -70,7 +89,10 @@ from .validation_rule import ValidationRule
 
 __all__ = [
 
+    # ===========================
     # Core
+    # ===========================
+
     "NumberSequence",
 
     "Party",
@@ -83,7 +105,11 @@ __all__ = [
     "PrintPartnerProfile",
 
 
+
+    # ===========================
     # Masters
+    # ===========================
+
     "PaperSize",
     "PaperBrand",
     "BindingType",
@@ -93,20 +119,52 @@ __all__ = [
     "Machine",
 
 
+
+    # ===========================
     # Product Management
+    # ===========================
+
     "Product",
     "ProductCategory",
     "ProductTemplate",
 
+    "QuotationMaster",
+    "QuotationItem",
 
+    "InvoiceMaster",
+    "InvoiceItem",
+
+
+
+    # ===========================
+    # Build-030 Job Order
+    # ===========================
+
+    "JobOrderMaster",
+    "JobOrderItem",
+    "JobOrderStatusHistory",
+
+
+
+    # ===========================
     # Dynamic Specification Engine
+    # ===========================
+
     "SpecificationGroup",
+
     "FieldOption",
+
     "SpecificationField",
+
     "TemplateFieldMapping",
+
     "SpecificationDependencyRule",
+
     "FormulaRule",
+
     "TemplateVersion",
+
     "SpecificationAudit",
+
     "ValidationRule",
 ]

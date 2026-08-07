@@ -30,6 +30,23 @@ from app.api import field_option
 from app.api import validation_rule
 from app.api import template_field_mapping
 from app.api import specification_dependency_rule
+from app.api import specification_runtime
+
+from app.api import quotation_router
+from app.api import quotation_item_router
+from app.api import quotation_conversion
+
+from app.api import invoice
+from app.api import invoice_item
+
+
+# ==========================
+# Job Order Modules
+# Build-030
+# ==========================
+
+from app.api import job_order
+from app.api import job_order_status_history
 
 
 logging.basicConfig(
@@ -48,6 +65,7 @@ async def global_exception_handler(
     request: Request,
     exc: Exception,
 ):
+
     logging.exception(exc)
 
     return JSONResponse(
@@ -60,62 +78,163 @@ async def global_exception_handler(
 
 @app.get("/")
 def root():
+
     return {
         "message": "MKPrintingMasterPro ERP API is running"
     }
-
 
 
 # ==========================
 # Master Modules
 # ==========================
 
-app.include_router(party.router)
+app.include_router(
+    party.router
+)
 
-app.include_router(supplier.router)
+app.include_router(
+    supplier.router
+)
 
-app.include_router(customer.router)
+app.include_router(
+    customer.router
+)
 
-app.include_router(employee.router)
+app.include_router(
+    employee.router
+)
 
-app.include_router(print_partner.router)
+app.include_router(
+    print_partner.router
+)
 
-app.include_router(product.router)
+app.include_router(
+    product.router
+)
 
-app.include_router(product_category.router)
+app.include_router(
+    product_category.router
+)
 
-app.include_router(product_template.router)
+app.include_router(
+    product_template.router
+)
 
-app.include_router(machine.router)
+app.include_router(
+    machine.router
+)
 
-app.include_router(company_profile.router)
+app.include_router(
+    company_profile.router
+)
 
-app.include_router(system_setting.router)
+app.include_router(
+    system_setting.router
+)
 
-app.include_router(paper_type.router)
+app.include_router(
+    paper_type.router
+)
 
-app.include_router(paper_brand.router)
+app.include_router(
+    paper_brand.router
+)
 
-app.include_router(paper_gsm.router)
+app.include_router(
+    paper_gsm.router
+)
 
-app.include_router(paper_size.router)
+app.include_router(
+    paper_size.router
+)
 
-app.include_router(binding_type.router)
+app.include_router(
+    binding_type.router
+)
 
-app.include_router(specification_group.router)
+app.include_router(
+    specification_group.router
+)
 
-app.include_router(specification_field.router)
+app.include_router(
+    specification_field.router
+)
 
 
+# ==========================
 # Formula Engine Modules
-app.include_router(formula_rule.router)
+# ==========================
 
-app.include_router(field_option.router)
+app.include_router(
+    formula_rule.router
+)
 
-app.include_router(validation_rule.router)
+app.include_router(
+    field_option.router
+)
+
+app.include_router(
+    validation_rule.router
+)
+
 app.include_router(
     template_field_mapping.router
 )
+
 app.include_router(
     specification_dependency_rule.router
+)
+
+app.include_router(
+    specification_runtime.router
+)
+
+
+# ==========================
+# Quotation Modules
+# ==========================
+
+app.include_router(
+    quotation_router
+)
+
+app.include_router(
+    quotation_item_router
+)
+
+app.include_router(
+    quotation_conversion.router
+)
+
+
+# ==========================
+# Invoice Modules
+# ==========================
+
+app.include_router(
+    invoice.router
+)
+
+app.include_router(
+    invoice_item.router
+)
+
+
+# ==========================
+# Job Order Modules
+# Build-030
+# ==========================
+
+app.include_router(
+    job_order.router
+)
+
+
+# ==========================
+# Job Order Status History
+# Build-030 Phase-7
+# ==========================
+
+app.include_router(
+    job_order_status_history.router
 )
