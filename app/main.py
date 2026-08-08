@@ -1,9 +1,9 @@
-"""
+﻿"""
 MKPrintingMasterPro ERP
 
 Application Main Entry
 
-Build-034
+Build-035
 """
 
 from fastapi import FastAPI
@@ -28,6 +28,9 @@ from app.api import (
     party,
     print_partner,
     production_operation_execution,
+    production_operation_execution_history,
+    production_operation_execution_status,
+    production_operation_execution_status_history,
     production_output,
     production_order,
     product,
@@ -47,14 +50,14 @@ from app.api import (
 
 app = FastAPI(
     title="MKPrintingMasterPro ERP",
-    version="Build-034",
+    version="Build-035",
     description="Printing ERP Management System",
 )
 
 
-# ==========================
+# ============================================================
 # Company / Party Master
-# ==========================
+# ============================================================
 
 app.include_router(company_profile.router)
 app.include_router(customer.router)
@@ -66,9 +69,9 @@ app.include_router(print_partner.router)
 app.include_router(system_setting.router)
 
 
-# ==========================
+# ============================================================
 # Product & Specification
-# ==========================
+# ============================================================
 
 app.include_router(product.router)
 app.include_router(product_category.router)
@@ -90,9 +93,9 @@ app.include_router(
 )
 
 
-# ==========================
+# ============================================================
 # Paper Master
-# ==========================
+# ============================================================
 
 app.include_router(paper_brand.router)
 app.include_router(paper_type.router)
@@ -100,9 +103,9 @@ app.include_router(paper_size.router)
 app.include_router(paper_gsm.router)
 
 
-# ==========================
+# ============================================================
 # Sales
-# ==========================
+# ============================================================
 
 app.include_router(quotation.router)
 app.include_router(quotation_item.router)
@@ -111,9 +114,9 @@ app.include_router(invoice.router)
 app.include_router(invoice_item.router)
 
 
-# ==========================
+# ============================================================
 # Job Order
-# ==========================
+# ============================================================
 
 app.include_router(job_order.router)
 
@@ -122,10 +125,9 @@ app.include_router(
 )
 
 
-# ==========================
+# ============================================================
 # Production
-# Build-031 / Build-034
-# ==========================
+# ============================================================
 
 app.include_router(
     production_order.router
@@ -140,30 +142,69 @@ app.include_router(
 )
 
 
-# Build-033
-# Production Operation Execution API
+# ============================================================
+# Production Operation Execution
+#
+# Build-033 + Build-035
+# ============================================================
 
 app.include_router(
     production_operation_execution.router
 )
 
 
+# ============================================================
+# Production Operation Execution Status
+#
+# Build-035
+# ============================================================
+
+app.include_router(
+    production_operation_execution_status.router
+)
+
+
+# ============================================================
+# Production Operation Execution History
+#
+# Build-035
+# ============================================================
+
+app.include_router(
+    production_operation_execution_history.router
+)
+
+
+# ============================================================
+# Production Operation Execution Status History
+#
+# Build-035
+# ============================================================
+
+app.include_router(
+    production_operation_execution_status_history.router
+)
+
+
+# ============================================================
+# Production Output
+#
 # Build-034
-# Production Output API
+# ============================================================
 
 app.include_router(
     production_output.router
 )
 
 
-# ==========================
+# ============================================================
 # Root API
-# ==========================
+# ============================================================
 
 @app.get("/")
 def root():
     return {
         "application": "MKPrintingMasterPro ERP",
-        "version": "Build-034",
-        "status": "Running"
+        "version": "Build-035",
+        "status": "running",
     }

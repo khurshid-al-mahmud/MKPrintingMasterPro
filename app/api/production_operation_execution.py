@@ -3,7 +3,7 @@ MKPrintingMasterPro ERP
 
 Production Operation Execution API
 
-Build-033 Phase-3
+Build-035
 """
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -28,9 +28,9 @@ router = APIRouter(
 )
 
 
-# ==========================
+# ============================================================
 # Create
-# ==========================
+# ============================================================
 
 @router.post(
     "/",
@@ -40,16 +40,14 @@ def create_production_operation_execution(
     data: ProductionOperationExecutionCreate,
     db: Session = Depends(get_db),
 ):
-
     service = ProductionOperationExecutionService(db)
 
     return service.create(data)
 
 
-
-# ==========================
+# ============================================================
 # Get All
-# ==========================
+# ============================================================
 
 @router.get(
     "/",
@@ -58,16 +56,14 @@ def create_production_operation_execution(
 def get_production_operation_executions(
     db: Session = Depends(get_db),
 ):
-
     service = ProductionOperationExecutionService(db)
 
     return service.get_all()
 
 
-
-# ==========================
+# ============================================================
 # Get By ID
-# ==========================
+# ============================================================
 
 @router.get(
     "/{execution_id}",
@@ -77,7 +73,6 @@ def get_production_operation_execution(
     execution_id: int,
     db: Session = Depends(get_db),
 ):
-
     service = ProductionOperationExecutionService(db)
 
     execution = service.get_by_id(
@@ -93,10 +88,9 @@ def get_production_operation_execution(
     return execution
 
 
-
-# ==========================
+# ============================================================
 # Update
-# ==========================
+# ============================================================
 
 @router.put(
     "/{execution_id}",
@@ -107,7 +101,6 @@ def update_production_operation_execution(
     data: ProductionOperationExecutionUpdate,
     db: Session = Depends(get_db),
 ):
-
     service = ProductionOperationExecutionService(db)
 
     execution = service.update(
@@ -124,10 +117,9 @@ def update_production_operation_execution(
     return execution
 
 
-
-# ==========================
+# ============================================================
 # Delete
-# ==========================
+# ============================================================
 
 @router.delete(
     "/{execution_id}",
@@ -136,7 +128,6 @@ def delete_production_operation_execution(
     execution_id: int,
     db: Session = Depends(get_db),
 ):
-
     service = ProductionOperationExecutionService(db)
 
     deleted = service.delete(

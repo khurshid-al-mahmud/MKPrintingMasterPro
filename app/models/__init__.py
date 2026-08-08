@@ -1,9 +1,8 @@
-"""
+﻿"""
 MKPrintingMasterPro ERP
 
 Central Model Registry
 """
-
 
 # ===========================
 # Core Models
@@ -75,6 +74,15 @@ from .job_order_status_history import JobOrderStatusHistory
 # ===========================
 
 from .production_order_master import ProductionOrderMaster
+from .production_operation_execution import ProductionOperationExecution
+from .production_output import ProductionOutput
+from .production_operation_execution_status import ProductionOperationExecutionStatus
+from .production_operation_execution_status_history import (
+    ProductionOperationExecutionStatusHistory,
+)
+from .production_operation_execution_history import (
+    ProductionOperationExecutionHistory,
+)
 
 
 # ===========================
@@ -105,7 +113,6 @@ from .validation_rule import ValidationRule
 # ===========================
 
 __all__ = [
-
     # ===========================
     # Core
     # ===========================
@@ -121,7 +128,6 @@ __all__ = [
     "EmployeeProfile",
     "PrintPartnerProfile",
 
-
     # ===========================
     # Paper & Production Masters
     # ===========================
@@ -136,7 +142,6 @@ __all__ = [
     "SystemSetting",
     "Machine",
 
-
     # ===========================
     # Product Management
     # ===========================
@@ -145,7 +150,6 @@ __all__ = [
     "ProductCategory",
     "ProductTemplate",
 
-
     # ===========================
     # Quotation Management
     # ===========================
@@ -153,14 +157,12 @@ __all__ = [
     "QuotationMaster",
     "QuotationItem",
 
-
     # ===========================
     # Invoice Management
     # ===========================
 
     "InvoiceMaster",
     "InvoiceItem",
-
 
     # ===========================
     # Build-030 Job Order
@@ -170,13 +172,16 @@ __all__ = [
     "JobOrderItem",
     "JobOrderStatusHistory",
 
-
     # ===========================
     # Build-031 Production Order
     # ===========================
 
     "ProductionOrderMaster",
-
+    "ProductionOperationExecution",
+    "ProductionOutput",
+    "ProductionOperationExecutionStatus",
+    "ProductionOperationExecutionStatusHistory",
+    "ProductionOperationExecutionHistory",
 
     # ===========================
     # Build-031 Operation Management
@@ -184,7 +189,6 @@ __all__ = [
 
     "OperationMaster",
     "OperationAssignment",
-
 
     # ===========================
     # Dynamic Specification Engine
