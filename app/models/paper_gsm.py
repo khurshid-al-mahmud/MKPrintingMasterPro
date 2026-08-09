@@ -21,6 +21,7 @@ Examples:
 """
 
 from datetime import datetime
+from decimal import Decimal
 
 from sqlalchemy import Boolean
 from sqlalchemy import DateTime
@@ -58,7 +59,7 @@ class PaperGSM(Base):
         index=True,
     )
 
-    gsm_value: Mapped[float] = mapped_column(
+    gsm_value: Mapped[Decimal] = mapped_column(
         Numeric(8, 2),
         nullable=False,
     )
