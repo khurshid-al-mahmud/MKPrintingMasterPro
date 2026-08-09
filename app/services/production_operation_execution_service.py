@@ -1,15 +1,19 @@
-"""
+﻿"""
 MKPrintingMasterPro ERP
 
 Production Operation Execution Service
 
-Build-033 + Build-035
+Build-033 + Build-035 + Build-038
 """
 
 from sqlalchemy.orm import Session
 
 from app.models.production_operation_execution import (
     ProductionOperationExecution,
+)
+
+from app.models.operation_assignment import (
+    OperationAssignment,
 )
 
 from app.repositories.production_operation_execution_repository import (
@@ -28,23 +32,34 @@ from app.services.production_operation_execution_status_history_service import (
 
 class ProductionOperationExecutionService:
     """
-    Production Operation Execution Business Service.
+    Business service for Production Operation Execution.
+
+    Build-033:
+        Core production operation execution.
 
     Build-035:
-        Automatically creates status history
-        when the execution status changes.
+        Automatically records status changes
+        in Production Operation Execution Status History.
+
+    Build-038:
+        Automatically synchronizes Operation Assignment
+        when an execution is completed.
     """
 
     def __init__(self, db: Session):
         self.db = db
-        self.repository = ProductionOperationExecutionRepository(db)
+
+        self.repository = ProductionOperationExecutionRepository(
+            db
+        )
+
         self.history_service = (
             ProductionOperationExecutionStatusHistoryService()
         )
 
-    # ==========================
-    # Create
-    # ==========================
+    # ============================================================
+    # CREATE
+    # ============================================================
 
     def create(
         self,
@@ -55,11 +70,13 @@ class ProductionOperationExecutionService:
             **data.model_dump()
         )
 
-        return self.repository.create(execution)
+        return self.repository.create(
+            execution
+        )
 
-    # ==========================
-    # Get By ID
-    # ==========================
+    # ============================================================
+    # GET BY ID
+    # ============================================================
 
     def get_by_id(
         self,
@@ -70,9 +87,9 @@ class ProductionOperationExecutionService:
             execution_id
         )
 
-    # ==========================
-    # Get All
-    # ==========================
+    # ============================================================
+    # GET ALL
+    # ============================================================
 
     def get_all(
         self,
@@ -80,9 +97,9 @@ class ProductionOperationExecutionService:
 
         return self.repository.get_all()
 
-    # ==========================
-    # Update
-    # ==========================
+    # ============================================================
+    # UPDATE
+    # ============================================================
 
     def update(
         self,
@@ -94,37 +111,39 @@ class ProductionOperationExecutionService:
             execution_id
         )
 
-        if not execution:
+        if execution is None:
             return None
 
-        # ------------------------------------------
-        # Capture previous status before update
-        # ------------------------------------------
+        # --------------------------------------------------------
+        # Capture existing status BEFORE applying updates
+        # --------------------------------------------------------
 
         previous_status = execution.status
 
-        # ------------------------------------------
-        # Prepare update data
-        # ------------------------------------------
+        # --------------------------------------------------------
+        # Convert Pydantic update schema to dictionary
+        # --------------------------------------------------------
 
         update_data = data.model_dump(
             exclude_unset=True
         )
 
-        # ------------------------------------------
+        # --------------------------------------------------------
         # Determine whether status is changing
-        # ------------------------------------------
+        # --------------------------------------------------------
 
-        new_status = update_data.get("status")
+        new_status = update_data.get(
+            "status"
+        )
 
         status_changed = (
             new_status is not None
             and new_status != previous_status
         )
 
-        # ------------------------------------------
+        # --------------------------------------------------------
         # Apply execution updates
-        # ------------------------------------------
+        # --------------------------------------------------------
 
         for key, value in update_data.items():
             setattr(
@@ -133,9 +152,9 @@ class ProductionOperationExecutionService:
                 value,
             )
 
-        # ------------------------------------------
-        # Build status history only when status changes
-        # ------------------------------------------
+        # --------------------------------------------------------
+        # Create status history when status changes
+        # --------------------------------------------------------
 
         if status_changed:
 
@@ -150,24 +169,57 @@ class ProductionOperationExecutionService:
                 remarks=execution.remarks,
             )
 
-        # ------------------------------------------
-        # Commit execution update + status history
-        # in the same transaction
-        # ------------------------------------------
+        # --------------------------------------------------------
+        # Build-038
+        #
+        # When execution becomes Completed, synchronize the
+        # related Operation Assignment in the SAME transaction.
+        # --------------------------------------------------------
+
+        if (
+            status_changed
+            and execution.status == "Completed"
+        ):
+
+            assignment = (
+                self.db.query(OperationAssignment)
+                .filter(
+                    OperationAssignment.id
+                    == execution.operation_assignment_id
+                )
+                .first()
+            )
+
+            if assignment is not None:
+
+                assignment.status = "Completed"
+                assignment.is_completed = True
+
+                if execution.operator_name:
+                    assignment.updated_by = (
+                        execution.operator_name
+                    )
+
+        # --------------------------------------------------------
+        # Commit execution, history and assignment update
+        # in the SAME database transaction
+        # --------------------------------------------------------
 
         self.db.commit()
 
-        # ------------------------------------------
+        # --------------------------------------------------------
         # Refresh execution after commit
-        # ------------------------------------------
+        # --------------------------------------------------------
 
-        self.db.refresh(execution)
+        self.db.refresh(
+            execution
+        )
 
         return execution
 
-    # ==========================
-    # Delete
-    # ==========================
+    # ============================================================
+    # DELETE
+    # ============================================================
 
     def delete(
         self,
@@ -178,7 +230,7 @@ class ProductionOperationExecutionService:
             execution_id
         )
 
-        if not execution:
+        if execution is None:
             return False
 
         self.repository.delete(
@@ -188,12 +240,14 @@ class ProductionOperationExecutionService:
         return True
 
 
-# ==========================
-# Service Instance
-# ==========================
+# ================================================================
+# SERVICE FACTORY
+# ================================================================
 
 def get_production_operation_execution_service(
     db: Session,
-):
+) -> ProductionOperationExecutionService:
 
-    return ProductionOperationExecutionService(db)
+    return ProductionOperationExecutionService(
+        db
+    )
