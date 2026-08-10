@@ -1,4 +1,4 @@
-﻿"""
+"""
 MKPrintingMasterPro ERP
 
 Production Operation Execution Model
@@ -75,6 +75,21 @@ class ProductionOperationExecution(Base):
         nullable=False,
         index=True,
     )
+
+    # ==================================================
+    # Build-040
+    # Physical machine responsible for this operation.
+    # ==================================================
+
+    machine_id: Mapped[int | None] = mapped_column(
+        ForeignKey(
+            "machines.id",
+            ondelete="SET NULL",
+        ),
+        nullable=True,
+        index=True,
+    )
+
 
     # ==================================================
     # Execution Status
@@ -170,6 +185,13 @@ class ProductionOperationExecution(Base):
         "OperationAssignment",
         back_populates="production_operation_executions",
     )
+
+    # Build-040
+    machine = relationship(
+        "Machine",
+        foreign_keys=[machine_id],
+    )
+
 
     production_outputs = relationship(
         "ProductionOutput",

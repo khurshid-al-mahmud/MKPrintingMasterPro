@@ -1,4 +1,4 @@
-﻿"""
+"""
 MKPrintingMasterPro ERP
 
 Production Operation Execution Service
@@ -127,6 +127,40 @@ class ProductionOperationExecutionService:
         update_data = data.model_dump(
             exclude_unset=True
         )
+        # --------------------------------------------------------
+        # Build-040 R9-C
+        #
+        # Execution machine must match the machine assigned
+        # to the related Operation Assignment.
+        #
+        # Only validate when machine_id is explicitly supplied
+        # in the update payload.
+        # --------------------------------------------------------
+
+        if "machine_id" in update_data:
+
+            assignment = (
+                self.db.query(OperationAssignment)
+                .filter(
+                    OperationAssignment.id
+                    == execution.operation_assignment_id
+                )
+                .first()
+            )
+
+            if assignment is None:
+                raise ValueError(
+                    "Operation Assignment not found for Execution."
+                )
+
+            if (
+                update_data["machine_id"]
+                != assignment.machine_id
+            ):
+                raise ValueError(
+                    "Machine mismatch: Execution machine_id "
+                    "must match Operation Assignment machine_id."
+                )
 
         # --------------------------------------------------------
         # Determine whether status is changing

@@ -17,6 +17,9 @@ class OperationAssignmentBase(BaseModel):
     production_order_id: int
     operation_id: int
 
+
+    # Build-040
+    machine_id: int | None = None
     sequence_no: int = 1
 
     assigned_party_id: Optional[int] = None
@@ -44,6 +47,9 @@ class OperationAssignmentUpdate(BaseModel):
 
     operation_id: Optional[int] = None
 
+
+    # Build-040
+    machine_id: Optional[int] = None
     sequence_no: Optional[int] = None
 
     assigned_party_id: Optional[int] = None

@@ -1,4 +1,4 @@
-"""
+﻿"""
 MKPrintingMasterPro ERP
 
 Production Operation Execution API
@@ -103,10 +103,17 @@ def update_production_operation_execution(
 ):
     service = ProductionOperationExecutionService(db)
 
-    execution = service.update(
-        execution_id,
-        data,
-    )
+    try:
+        execution = service.update(
+            execution_id,
+            data,
+        )
+
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=409,
+            detail=str(exc),
+        )
 
     if not execution:
         raise HTTPException(

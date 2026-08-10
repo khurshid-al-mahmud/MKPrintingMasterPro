@@ -1,4 +1,4 @@
-"""
+﻿"""
 MKPrintingMasterPro ERP
 
 Production Operation Execution Schema
@@ -20,6 +20,9 @@ class ProductionOperationExecutionBase(BaseModel):
 
     operation_assignment_id: int
 
+
+    # Build-040
+    machine_id: int | None = None
     status: str = "Pending"
 
     planned_quantity: float | None = None
@@ -54,6 +57,9 @@ class ProductionOperationExecutionUpdate(BaseModel):
     Update schema.
     """
 
+    # Build-040
+    # Physical machine responsible for this operation.
+    machine_id: int | None = None
     status: str | None = None
 
     completed_quantity: float | None = None

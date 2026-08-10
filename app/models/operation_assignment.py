@@ -67,6 +67,21 @@ class OperationAssignment(Base):
         index=True,
     )
 
+    # ==================================================
+    # Build-040
+    # Physical machine responsible for this operation.
+    # ==================================================
+
+    machine_id: Mapped[int | None] = mapped_column(
+        ForeignKey(
+            "machines.id",
+            ondelete="SET NULL",
+        ),
+        nullable=True,
+        index=True,
+    )
+
+
     sequence_no: Mapped[int] = mapped_column(
         Integer,
         nullable=False,
@@ -167,6 +182,13 @@ class OperationAssignment(Base):
         "OperationMaster",
         back_populates="operation_assignments",
     )
+
+    # Build-040
+    machine = relationship(
+        "Machine",
+        foreign_keys=[machine_id],
+    )
+
 
 
     assigned_party = relationship(
