@@ -66,8 +66,49 @@ class ProductionOperationExecutionService:
         data: ProductionOperationExecutionCreate,
     ) -> ProductionOperationExecution:
 
+        # --------------------------------------------------------
+        # Build-040 R9-D
+        #
+        # Execution must be linked to a valid Operation Assignment.
+        # Machine is inherited from the Assignment when available.
+        # If the caller explicitly supplies machine_id, it must
+        # match the Assignment machine_id.
+        # --------------------------------------------------------
+
+        assignment = (
+            self.db.query(OperationAssignment)
+            .filter(
+                OperationAssignment.id
+                == data.operation_assignment_id
+            )
+            .first()
+        )
+
+        if assignment is None:
+            raise ValueError(
+                "Operation Assignment not found for Execution."
+            )
+
+        create_data = data.model_dump()
+
+        assignment_machine_id = assignment.machine_id
+        requested_machine_id = create_data.get("machine_id")
+
+        if (
+            requested_machine_id is not None
+            and assignment_machine_id is not None
+            and requested_machine_id != assignment_machine_id
+        ):
+            raise ValueError(
+                "Machine mismatch: Execution machine_id "
+                "must match Operation Assignment machine_id."
+            )
+
+        if requested_machine_id is None:
+            create_data["machine_id"] = assignment_machine_id
+
         execution = ProductionOperationExecution(
-            **data.model_dump()
+            **create_data
         )
 
         return self.repository.create(
