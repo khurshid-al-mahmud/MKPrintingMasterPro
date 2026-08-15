@@ -1,4 +1,5 @@
-﻿"""
+
+"""
 MKPrintingMasterPro ERP
 
 Application Main Entry
@@ -142,6 +143,8 @@ app.include_router(
 )
 
 
+
+
 # ============================================================
 # Production Operation Execution
 #
@@ -151,6 +154,8 @@ app.include_router(
 app.include_router(
     production_operation_execution.router
 )
+
+
 
 
 # ============================================================
@@ -197,6 +202,8 @@ app.include_router(
 )
 
 
+
+
 # ============================================================
 # Root API
 # ============================================================
@@ -208,3 +215,12 @@ def root():
         "version": "Build-035",
         "status": "running",
     }
+
+# ============================================================
+# User Interface
+# ============================================================
+
+
+
+
+
